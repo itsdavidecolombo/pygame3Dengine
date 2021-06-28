@@ -27,5 +27,11 @@ class EventHandlerMock(EventHandler):
                 print('Stopping the engine')
                 return 'quit_event'
             elif event == EventHandlerMock.OK:
-                print('OK event reached')
-                return 'ok_event'
+                feed = True
+                feed = feed and self.board.rotate_x()
+                feed = feed and self.board.rotate_y()
+                feed = feed and self.board.rotate_z()
+                if feed:
+                    return 'ok_event'
+                else:
+                    return 'quit_event'

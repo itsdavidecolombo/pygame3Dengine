@@ -30,15 +30,29 @@ class GameBoard:
         self.creatures.remove(to_remove)
         return True
 
-    def rotate_x(self) -> str:
-        return 'rotate cube on x axis'
+    def rotate_x(self) -> bool:
+        if not self.__check_before_rotate():
+            return False
+        print('rotate cube around x axis')
+        return True
 
-    def rotate_y(self) -> str:
-        return  'rotate cube on y axis'
+    def rotate_y(self) -> bool:
+        if not self.__check_before_rotate():
+            return False
+        print('rotate cube around y axis')
+        return True
 
-    def rotate_z(self) -> str:
-        return 'rotate cube on z axis'
+    def rotate_z(self) -> bool:
+        if not self.__check_before_rotate():
+            return False
+        print('rotate cube around z axis')
+        return True
 
+    def __check_before_rotate(self) -> bool:
+        if self.player is None:
+            print('Cannot find reference to the player object')
+            return False
+        return True
 
 # ========================= MODULE FUNCTIONS =========================
 def _init_list(a_list):

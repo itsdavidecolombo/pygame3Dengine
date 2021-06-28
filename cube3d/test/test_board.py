@@ -74,13 +74,19 @@ class TestGameBoard(unittest.TestCase):
             print(ex.__str__())
 
     def test_rotate_x(self):
-        self.assertTrue(self.board.rotate_x() == 'rotate cube on x axis')
+        self.assertFalse(self.board.rotate_x())
+        self.board.set_player(Cube())
+        self.assertTrue(self.board.rotate_x())
 
     def test_rotate_y(self):
-        self.assertTrue(self.board.rotate_y() == 'rotate cube on y axis')
+        self.assertFalse(self.board.rotate_y())
+        self.board.set_player(Cube())
+        self.assertTrue(self.board.rotate_y())
 
     def test_rotate_z(self):
-        self.assertTrue(self.board.rotate_z() == 'rotate cube on z axis')
+        self.assertFalse(self.board.rotate_z())
+        self.board.set_player(Cube())
+        self.assertTrue(self.board.rotate_z())
 
 
 if __name__ == '__main__':

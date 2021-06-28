@@ -9,6 +9,7 @@ import unittest
 from cube3d.board import GameBoard
 from cube3d.test.enginetest import engine_mock
 from cube3d.test.handlertest import handler_mock
+from cube3d.data_model import Cube
 
 # ================================= TEST EVENT HANDLER CLASS =================================
 class TestHandler(unittest.TestCase):
@@ -26,9 +27,15 @@ class TestHandler(unittest.TestCase):
         self.assertTrue(self.handler.board is not None)
 
     def test_ok_event_handling(self):
+        self.board.set_player(Cube())
         events = ['ok']
         res = self.handler.handle_events(events)
         self.assertTrue(res == 'ok_event')
+
+    def test_quit_when_player_is_missing(self):
+        events = ['ok']
+        res = self.handler.handle_events(events)
+        self.assertTrue(res == 'quit_event')
 
     def test_quit_event_handling(self):
         events = ['quit']
