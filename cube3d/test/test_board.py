@@ -16,7 +16,7 @@ def make_test_board():
 class TestGameBoard(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.board = make_test_board()
+        self.board  = make_test_board()
         self.to_add = Cube()
 
     def tearDown(self) -> None:
@@ -24,33 +24,30 @@ class TestGameBoard(unittest.TestCase):
 
     def test_game_board(self):
         self.assertTrue(self.board is not None)
+        self.assertTrue(self.board.engine is not None)
+        self.assertTrue(self.board.player is None)
 
-    def test_add_object(self):
+    def test_add_creature(self):
         self.board.add_creature(self.to_add)
         self.assertTrue(len(self.board.creatures) == 1)
 
-    def test_add_object_ValueError_add_twice(self):
-        self.board.add_creature(self.to_add)
-        try:
-            self.board.add_creature(self.to_add)
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
+    def test_should_return_false_when_added_twice(self):
+        is_set = self.board.add_creature(self.to_add)
+        self.assertTrue(is_set)
+        is_set = self.board.add_creature(self.to_add)
+        self.assertFalse(is_set)
 
-    def test_remove_object(self):
+    def test_remove_creature(self):
         self.board.add_creature(self.to_add)
         is_removed = self.board.remove_creature(self.to_add)
-        self.assertTrue(len(self.board.creatures) == 0)
         self.assertTrue(is_removed)
+        self.assertTrue(len(self.board.creatures) == 0)
 
-    def test_remove_drawable_ValueError_element_not_present(self):
-        try:
-            self.board.remove_creature(self.to_add)
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
+    def test_should_return_false_when_remove_not_found(self):
+        is_removed = self.board.remove_creature(self.to_add)
+        self.assertFalse(is_removed)
 
-    def test_live_objects_in_constructor(self):
+    def test_creature_list_in_constructor(self):
         board = GameBoard(engine = engine_mock.make_engine_mock(), creatures = [self.to_add])
         self.assertTrue(len(board.creatures) == 1)
 
@@ -65,13 +62,11 @@ class TestGameBoard(unittest.TestCase):
         self.board.set_player(Cube())
         self.assertTrue(self.board.player is not None)
 
-    def test_set_player_ValueError(self):
-        self.board.set_player(Cube())
-        try:
-            self.board.set_player(Cube())
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
+    def test_shoudl_return_false_when_player_already_set(self):
+        is_set = self.board.set_player(Cube())
+        self.assertTrue(is_set)
+        is_set = self.board.set_player(Cube())
+        self.assertFalse(is_set)
 
     def test_rotate_x(self):
         self.assertFalse(self.board.rotate_x())

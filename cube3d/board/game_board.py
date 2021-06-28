@@ -8,27 +8,33 @@
 
 class GameBoard:
 
-    def __init__(self, engine, creatures: list = None):
+    def __init__(self, engine, player = None, creatures: list = None):
         self.engine = engine
-        self.player = None
+        self.player = player
         self.creatures = _init_list(creatures)
 
     def set_player(self, player) -> bool:
         if self.player is not None:
-            raise ValueError(f'Cannot set player: player already exists')
+            # TODO log warning message
+            return False
         self.player = player
         return True
 
     def add_creature(self, to_add) -> bool or ValueError:
         for c in self.creatures:
             if c == to_add:
-                raise ValueError(f'Cannot add the same object twice')
+                # TODO log warning message
+                return False
         self.creatures.append(to_add)
         return True
 
-    def remove_creature(self, to_remove) -> bool or ValueError:
-        self.creatures.remove(to_remove)
-        return True
+    def remove_creature(self, to_remove) -> bool:
+        for c in self.creatures:
+            if c == to_remove:
+                self.creatures.remove(to_remove)
+                return True
+        # TODO log warning message
+        return False
 
     def rotate_x(self) -> bool:
         if not self.__check_before_rotate():
