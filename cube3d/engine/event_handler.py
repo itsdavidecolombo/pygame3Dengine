@@ -48,5 +48,5 @@ class EventHandler:
 
 # ============================= QUIT ENGINE METHOD =============================
     def __quit_engine(self) -> bool:
-        self.engine.stop()
+        self.engine.guard.safe_shut_down()
         return False

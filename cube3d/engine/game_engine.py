@@ -5,18 +5,11 @@
 # @Description: The GameEngine class
 #
 #################################################
-from enum import Enum
 import threading
 import time
 import pygame
-import sys
 from cube3d.screen import Window
-from cube3d.engine import EventHandler, Clock
-
-class EngineState(Enum):
-    Created = 'created'
-    Running = 'running'
-    Destroyed = 'destroyed'
+from cube3d.engine import EventHandler, Clock, EngineState, EngineGuard
 
 ############################## GAME ENGINE CLASS ##############################
 class GameEngine(threading.Thread):
@@ -29,6 +22,7 @@ class GameEngine(threading.Thread):
         self.handler = handler
         self.window  = window
         self.clock   = clock
+        self.guard   = EngineGuard(self)
         self._elapsed_nanoseconds = time.time_ns()
         self._engine_state = EngineState.Created
         self._stop_event   = threading.Event()
@@ -60,20 +54,12 @@ class GameEngine(threading.Thread):
         self._stop_event.set()
         self._engine_state = EngineState.Destroyed
 
-    def start(self):
-        if self.window is None:
-            raise ValueError(f'Cannot start the Game Engine without the reference to the window object')
-
-        if self.handler is None:
-            raise ValueError(f'Cannot start the Game Engine without the reference to the event handler object')
-
-        if self.clock is None:
-            raise ValueError(f'Cannot start the Game Engine without the reference to the clock object')
-
-        if self._engine_state != EngineState.Created:
-            raise ValueError(f'Cannot start engine: current engine state is {self._engine_state}')
-
+    def start(self) -> bool:
+        if not self.guard.engine_is_ready_to_start():
+            self.guard.safe_shut_down()
+            return False
         self.__init_and_run()
+        return True
 
     def __init_and_run(self):
         pygame.init()
@@ -85,13 +71,9 @@ class GameEngine(threading.Thread):
         while not self._stop_event.is_set():
             time.sleep(self.clock.get_pause_seconds(elapsed_nano = self._elapsed_nanoseconds))
             self.__on_clock_tick()
-        self.__safe_shut_down()
+        self.guard.safe_shut_down()
         return
 
-    def __safe_shut_down(self):
-        self.window.close()
-        pygame.quit()
-        sys.exit()
 
     def __on_clock_tick(self):
         start_nanoseconds = time.time_ns()

@@ -40,11 +40,9 @@ class TestEngine(unittest.TestCase):
         self.engine.set_event_handler(self.handler)
         self.engine.start()
         self.assertTrue(self.engine.get_engine_state() == EngineState.Running)
-        try:
-            self.engine.start()
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
+        is_started = self.engine.start()
+        self.assertFalse(is_started)
+        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
 
     def test_stop_engine_ValueError(self):
         try:
@@ -95,29 +93,23 @@ class TestEngine(unittest.TestCase):
     def test_start_ValueError_missing_handler(self):
         self.engine.set_window(self.screen)
         self.engine.set_clock(self.clock)
-        try:
-            self.engine.start()
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
+        is_started = self.engine.start()
+        self.assertFalse(is_started)
+        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
 
     def test_start_engine_ValueError_window_missing(self):
         self.engine.set_clock(self.clock)
         self.engine.set_event_handler(self.handler)
-        try:
-            self.engine.start()
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
+        is_started = self.engine.start()
+        self.assertFalse(is_started)
+        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
 
     def test_start_engine_ValueError_clock_missing(self):
         self.engine.set_window(self.screen)
         self.engine.set_event_handler(self.handler)
-        try:
-            self.engine.start()
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
+        is_started = self.engine.start()
+        self.assertFalse(is_started)
+        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
 
 
 if __name__ == '__main__':

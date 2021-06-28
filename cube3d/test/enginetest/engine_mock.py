@@ -16,22 +16,18 @@ class EngineMock(GameEngine):
     def __init__(self, window = None, clock = None):
         super().__init__(clock = clock, window = window)
 
-    def start(self):
-        if self.window is None:
-            raise ValueError(f'Cannot start the Game Engine without the screen reference')
+    def set_guard(self, guard_mock):
+        self.guard = guard_mock
 
-        if self._engine_state != EngineState.Created:
-            raise ValueError(f'Cannot start engine: current engine state is {self._engine_state}')
-
-        if self.handler is None:
-            raise ValueError(f'Cannot start the Game Engine without the reference for the event handler')
-
-        if self.clock is None:
-            raise ValueError(f'Cannot start the Game Engine without the reference to the clock object')
-
+    def start(self) -> bool:
+        if not self.guard.engine_is_ready_to_start():
+            print('Shut down')
+            self._engine_state = EngineState.Destroyed
+            return False
         self._engine_state = EngineState.Running
         print('Opening the window')
         print('Engine is running')
+        return True
 
     def stop(self):
         if self._engine_state != EngineState.Running:
