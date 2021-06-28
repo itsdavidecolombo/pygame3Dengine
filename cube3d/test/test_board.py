@@ -61,6 +61,15 @@ class TestGameBoard(unittest.TestCase):
         except ValueError as ex:
             print(ex.__str__())
 
+    def test_rotate_x(self):
+        self.assertTrue(self.board.rotate_x() == 'rotate cube on x axis')
+
+    def test_rotate_y(self):
+        self.assertTrue(self.board.rotate_y() == 'rotate cube on y axis')
+
+    def test_rotate_z(self):
+        self.assertTrue(self.board.rotate_z() == 'rotate cube on z axis')
+
 
 if __name__ == '__main__':
     unittest.main()

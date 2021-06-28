@@ -23,13 +23,13 @@ class EventHandler:
 
             # KEYDOWN EVENTS
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
-                    self.engine.move_right()
-                if event.key == pygame.K_q:
-                    self.engine.move_left()
-                if event.key == pygame.K_j:
-                    self.engine.jump()
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_x:
+                    self.board.rotate_x()
+                elif event.key == pygame.K_y:
+                    self.board.rotate_y()
+                elif event.key == pygame.K_z:
+                    self.board.rotate_z()
+                elif event.key == pygame.K_ESCAPE:
                     self.engine.stop()
                     return False
 

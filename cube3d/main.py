@@ -1,13 +1,12 @@
-from cube3d.screen.window import Window
-from cube3d.engine.game_engine import GameEngine
-from cube3d.engine.event_handler import EventHandler
-from cube3d.data_model.cube import Cube
-from cube3d.board.game_board import GameBoard
+from cube3d.screen import Window
+from cube3d.engine import GameEngine, EventHandler
+from cube3d.data_model import Cube
+from cube3d.board import GameBoard
 
 def run():
 
     # ALLOCATE RESOURCES
-    cube = Cube()
+    player = Cube()
 
     # CREATE WINDOW
     window = Window('- game screen -')
@@ -18,10 +17,11 @@ def run():
     engine.set_window(window)
 
     # CREATE GAME BOARD
-    board = GameBoard(engine)
+    board = GameBoard(engine, player)
+
 
     # CREATE EVENT HANDLER
-    handler = EventHandler(engine)
+    handler = EventHandler(engine, board)
     engine.set_event_handler(handler)
 
     # START

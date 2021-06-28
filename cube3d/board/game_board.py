@@ -10,6 +10,7 @@ class GameBoard:
 
     def __init__(self, engine, creatures: list = None):
         self.engine = engine
+        self.player = None
         self.creatures = _init_list(creatures)
 
     def add_creature(self, to_add) -> bool or ValueError:
@@ -23,17 +24,14 @@ class GameBoard:
         self.creatures.remove(to_remove)
         return True
 
-    # def jump(self):
-    #     pass
-    #
-    # def fall(self):
-    #     pass
-    #
-    # def move_left(self):
-    #     pass
-    #
-    # def move_right(self):
-    #     pass
+    def rotate_x(self) -> str:
+        return 'rotate cube on x axis'
+
+    def rotate_y(self) -> str:
+        return  'rotate cube on y axis'
+
+    def rotate_z(self) -> str:
+        return 'rotate cube on z axis'
 
 
 # ========================= MODULE FUNCTIONS =========================

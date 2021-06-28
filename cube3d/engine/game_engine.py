@@ -24,7 +24,7 @@ class GameEngine(threading.Thread):
     def __init__(self, fps: int = 30, window: Window = None, handler: EventHandler = None):
         super().__init__()
         self.handler = handler
-        self.window = window
+        self.window  = window
         self._fps    = fps
         self._tick_length_nanoseconds = int((1 / fps) * 1e9)
         self._elapsed_nanoseconds = time.time_ns()
