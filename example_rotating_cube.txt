@@ -1,0 +1,186 @@
+example of rotating cube
+
+# This is a tutorial for rendering 3D object usign PyOpenGL and PyGame
+
+import numpy as np
+import pygame               # visualize the result on the screen
+# import OpenGL.GL as gl      # rendering
+from math import sin, cos       # for rotating the object in 3D space
+
+WIDTH, HEIGHT = 800, 600
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+def main():
+    # window = Window()
+    # cube1 = data_graphics()
+    # while True:
+    #     cube1.rotX += 0.001
+    #     cube1.rotY += 0.01
+    #     cube1.rotZ += 0.01
+    # cube1.render(window)
+    # window.update()
+
+    # scaling factor
+    scale = 100
+
+    # offset
+    x_offset = WIDTH / 2
+    y_offset = HEIGHT / 2
+
+    # cube vertices
+    points = list()
+    points.append(np.matrix([-1, -1, 1]))
+    points.append(np.matrix([1, -1, 1]))
+    points.append(np.matrix([1, 1, 1]))
+    points.append(np.matrix([-1, 1, 1]))
+    points.append(np.matrix([-1, -1, -1]))
+    points.append(np.matrix([1, -1, -1]))
+    points.append(np.matrix([1, 1, -1]))
+    points.append(np.matrix([-1, 1, -1]))
+
+    projection_mat = np.matrix([
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 0]
+    ])
+
+    angle = 0
+
+    projected_points: list
+    projected_points = [
+        [n, n] for n in range(len(points))
+    ]
+
+    pygame.display.set_caption("3D projection in pygame!")
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+    def connect_points(i, j, points_):
+        pygame.draw.line(screen, BLACK, (points_[i][0], points_[i][1]), (points_[j][0], points_[j][1]))
+
+    clock = pygame.time.Clock()
+    while True:
+        clock.tick(60)  # 60 FPS
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    exit()
+
+        # We need to compute the rotation matrix inside the game loop
+        rot_z = np.matrix([
+            [cos(angle), -sin(angle), 0],
+            [sin(angle), cos(angle), 0],
+            [0, 0, 1]
+        ])
+
+        rot_x = np.matrix([
+            [1, 0, 0],
+            [0, cos(angle), -sin(angle)],
+            [0, sin(angle), cos(angle)]
+        ])
+
+        rot_y = np.matrix([
+            [cos(angle), 0, sin(angle)],
+            [0, 1, 0],
+            [-sin(angle), 0, cos(angle)]
+        ])
+
+        # update stuffs
+        angle += 0.01
+        screen.fill(WHITE)
+
+        i = 0
+        for pt in points:
+            # rotation
+            rotation_all_axis = np.dot(rot_z, rot_y)
+            rotation_all_axis = np.dot(rotation_all_axis, rot_x)
+            rotated = np.dot(rotation_all_axis, pt.reshape((3, 1)))
+
+            # projection
+            proj2d = np.dot(projection_mat, rotated)
+            proj_x = int(proj2d[0][0] * scale) + x_offset
+            proj_y = int(proj2d[1][0] * scale) + y_offset
+
+            # save projected points
+            projected_points[i] = [proj_x, proj_y]
+
+            # drawing lines
+            connect_points(0, 1, projected_points)
+            connect_points(0, 3, projected_points)
+            connect_points(0, 4, projected_points)
+            connect_points(1, 2, projected_points)
+            connect_points(1, 5, projected_points)
+            connect_points(2, 3, projected_points)
+            connect_points(2, 6, projected_points)
+            connect_points(3, 7, projected_points)
+            connect_points(4, 5, projected_points)
+            connect_points(4, 7, projected_points)
+            connect_points(5, 6, projected_points)
+            connect_points(6, 7, projected_points)
+
+            # drawing
+            pygame.draw.circle(screen, BLACK, (proj_x, proj_y), 5)
+            i += 1
+
+
+        pygame.display.update()
+
+
+# =============================== OTHER CLASSES ===============================
+# class Window:
+#
+#     def __init__(self, width: int, height: int, title: str):
+#         self.width  = width
+#         self.height = height
+#         self.title  = title
+#         self.screen = pygame.display.set_mode((self.width, self.height))
+#         pygame.display.set_caption(self.title)
+#
+#     def is_pressed(self, key):
+#         keys = pygame.key.get_pressed()
+#
+#         if keys[key]:
+#             return True
+#
+#     def update(self):
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 exit()
+#         pygame.display.update()
+#
+# class data_graphics:
+#     def __init__(self, verts, edges, x, y, z, rotX, rotY, rotZ, scale):
+#         self.verts = verts
+#         self.edges = edges
+#         self.x = x
+#         self.y = y
+#         self.z = z
+#         self.rotX = rotX
+#         self.rotY = rotY
+#         self.rotZ = rotZ
+#         self.scale = scale
+#
+#     def project_and_rotate(self, x, y, z):
+#         pass
+#         # projX =
+#         # projY =
+#
+#     def render(self, window):
+#         window.screen.fill((0, 0, 0))
+#
+#         for vert in self.verts:
+#             point = self.project_and_rotate(vert[0], vert[1], vert[3])
+#             pygame.draw.circle(window.screen, (0, 255, 0), point, 6)
+#
+#         for edge in self.edges:
+#             point1 = self.project_and_rotate(self.verts[edge[0]][0], self.verts[edge[0]][1], self.verts[edge[0]][2])
+#             point2 = self.project_and_rotate(self.verts[edge[1]][0], self.verts[edge[1]][1], self.verts[edge[1]][2])
+#             pygame.draw.line(window.screen, (0, 255, 0), point1, point2, 5)
+
+if __name__ == '__main__':
+    main()
