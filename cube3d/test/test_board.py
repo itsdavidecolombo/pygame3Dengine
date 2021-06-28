@@ -61,6 +61,18 @@ class TestGameBoard(unittest.TestCase):
         except ValueError as ex:
             print(ex.__str__())
 
+    def test_set_player(self):
+        self.board.set_player(Cube())
+        self.assertTrue(self.board.player is not None)
+
+    def test_set_player_ValueError(self):
+        self.board.set_player(Cube())
+        try:
+            self.board.set_player(Cube())
+            self.fail()
+        except ValueError as ex:
+            print(ex.__str__())
+
     def test_rotate_x(self):
         self.assertTrue(self.board.rotate_x() == 'rotate cube on x axis')
 

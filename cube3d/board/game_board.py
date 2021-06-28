@@ -13,6 +13,12 @@ class GameBoard:
         self.player = None
         self.creatures = _init_list(creatures)
 
+    def set_player(self, player) -> bool:
+        if self.player is not None:
+            raise ValueError(f'Cannot set player: player already exists')
+        self.player = player
+        return True
+
     def add_creature(self, to_add) -> bool or ValueError:
         for c in self.creatures:
             if c == to_add:
