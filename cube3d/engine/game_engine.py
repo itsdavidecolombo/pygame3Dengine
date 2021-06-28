@@ -99,8 +99,6 @@ class GameEngine(threading.Thread):
         # Draw Objects
         self.__DISPLAY.fill(Window.BLACK)
 
-        # TODO call UIDelegate (return True or False)
-
         # Update display
         pygame.display.update()
         self._elapsed_nanoseconds = (time.time_ns() - start_nanoseconds)

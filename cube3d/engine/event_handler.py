@@ -18,24 +18,35 @@ class EventHandler:
         for event in pygame.event.get():
             # QUIT EVENT
             if event.type == pygame.QUIT:
-                self.engine.stop()
-                return False
+                self.__quit_engine()
 
             # KEYDOWN EVENTS
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_x:
-                    self.board.rotate_x()
-                elif event.key == pygame.K_y:
-                    self.board.rotate_y()
-                elif event.key == pygame.K_z:
-                    self.board.rotate_z()
-                elif event.key == pygame.K_ESCAPE:
-                    self.engine.stop()
-                    return False
+                self.__handle_keydown(event)
 
             # KEYUP EVENTS
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_j:
-                    self.engine.fall()
+                    pass
 
         return True
+
+# ============================= HANDLE KEYDOWN METHOD =============================
+    def __handle_keydown(self, event):
+        feed = True
+        if event.key == pygame.K_x:
+            feed = feed and self.board.rotate_x()
+        elif event.key == pygame.K_y:
+            feed = feed and self.board.rotate_y()
+        elif event.key == pygame.K_z:
+            feed = feed and self.board.rotate_z()
+        elif event.key == pygame.K_ESCAPE:
+            self.__quit_engine()
+
+        if not feed:
+            self.__quit_engine()
+
+# ============================= QUIT ENGINE METHOD =============================
+    def __quit_engine(self) -> bool:
+        self.engine.stop()
+        return False
