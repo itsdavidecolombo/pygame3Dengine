@@ -9,7 +9,8 @@ import threading
 import time
 import pygame
 from cube3d.screen import Window
-from cube3d.engine import EventHandler, Clock, EngineState, EngineGuard
+from cube3d.event import EventHandler
+from cube3d.engine import Clock, EngineState, EngineGuard
 
 ############################## GAME ENGINE CLASS ##############################
 class GameEngine(threading.Thread):

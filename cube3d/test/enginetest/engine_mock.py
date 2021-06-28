@@ -19,23 +19,23 @@ class EngineMock(GameEngine):
     def set_guard(self, guard_mock):
         self.guard = guard_mock
 
-    def start(self) -> bool:
+    def start(self) -> str:
+        debug = ''
         if not self.guard.engine_is_ready_to_start():
-            print('Shut down')
-            self._engine_state = EngineState.Destroyed
-            return False
+            return self.guard.safe_shut_down()
         self._engine_state = EngineState.Running
-        print('Opening the window')
-        print('Engine is running')
-        return True
+        debug += 'Init pygame '
+        debug += 'Opening the window '
+        debug += 'Engine is running'
+        return debug
 
-    def stop(self) -> bool:
+    def stop(self) -> str:
+        debug = ''
         if self._engine_state != EngineState.Running:
             raise ValueError(f'Cannot stop engine: current engine state is {self._engine_state}')
-        print('Closing the window')
-        print('Engine is stopped')
+        debug += 'Stopping the engine '
         self._engine_state = EngineState.Destroyed
-        return True
+        return debug
 
     def is_alive(self) -> bool:
         return self._engine_state == EngineState.Running

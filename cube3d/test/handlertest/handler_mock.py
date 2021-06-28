@@ -6,7 +6,7 @@
 # @Source: ENTER THE SOURCE HERE ...
 #
 #################################################
-from cube3d.engine import EventHandler
+from cube3d.event import EventHandler
 
 def make_handler_mock(board, guard):
     return EventHandlerMock(events = [], board = board, guard = guard)

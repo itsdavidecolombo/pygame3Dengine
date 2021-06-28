@@ -18,10 +18,11 @@ class GuardMock(EngineGuard):
     def set_engine(self, engine_mock):
         self.engine = engine_mock
 
-    def safe_shut_down(self) -> bool:
+    def safe_shut_down(self) -> str:
+        debug = ''
         if self.engine.get_engine_state() == EngineState.Running:
-            print('Stopping the engine')
-            print('Closing the window')
-            print('Quitting pygame')
-        print('Exit the system')
-        return True
+            debug += self.engine.stop()
+            debug += 'Closing the window '
+            debug += 'Quitting pygame '
+        debug += 'Exit the system'
+        return debug

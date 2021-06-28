@@ -38,8 +38,8 @@ class TestGuard(unittest.TestCase):
         self.engine_mock.set_window(Window('test'))
         self.engine_mock.set_event_handler(self.handler_mock)
         self.engine_mock.set_clock(Clock(fps = 30))
-        is_stopped = self.guard_mock.safe_shut_down()
-        self.assertTrue(is_stopped)
+        debug_msg = self.guard_mock.safe_shut_down()
+        self.assertTrue(debug_msg == 'Exit the system')
 
     def test_safe_shut_down(self):
         self.engine_mock.set_window(Window('test'))
@@ -47,8 +47,8 @@ class TestGuard(unittest.TestCase):
         self.engine_mock.set_clock(Clock(fps = 30))
         is_started = self.engine_mock.start()
         self.assertTrue(is_started)
-        is_stopped = self.guard_mock.safe_shut_down()
-        self.assertTrue(is_stopped)
+        debug_msg = self.guard_mock.safe_shut_down()
+        self.assertTrue(debug_msg == 'Stopping the engine Closing the window Quitting pygame Exit the system')
 
 if __name__ == '__main__':
     unittest.main()

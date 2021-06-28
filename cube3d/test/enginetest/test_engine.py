@@ -19,6 +19,7 @@ class TestEngine(unittest.TestCase):
         self.engine  = engine_mock.make_engine_mock()
         self.guard_mock = guard_mock.make_guard_mock()
         self.guard_mock.set_engine(self.engine)
+        self.engine.set_guard(self.guard_mock)
         self.clock   = Clock(fps = 30)
         self.screen  = Window('Engine Test', width = 800, height = 600)
         self.handler = handler_mock.make_handler_mock(board = None, guard = self.guard_mock)
@@ -35,8 +36,8 @@ class TestEngine(unittest.TestCase):
         is_started = self.engine.start()
         self.assertTrue(is_started)
         self.assertTrue(self.engine.get_engine_state() == EngineState.Running)
-        is_stopped = self.engine.stop()
-        self.assertTrue(is_stopped)
+        debug_msg = self.engine.stop()
+        self.assertTrue(debug_msg == 'Stopping the engine ')
         self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
 
 # =========================== START AND STOP TESTS ===========================
@@ -46,11 +47,10 @@ class TestEngine(unittest.TestCase):
         self.engine.set_event_handler(self.handler)
         self.engine.start()
         self.assertTrue(self.engine.get_engine_state() == EngineState.Running)
-        is_started = self.engine.start()
-        self.assertFalse(is_started)
-        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
+        debug_msg = self.engine.start()
+        self.assertTrue(debug_msg == 'Stopping the engine Closing the window Quitting pygame Exit the system')
 
-    def test_stop_engine_ValueError(self):
+    def test_stop_engine_ValueError_stop_before_starting(self):
         try:
             self.engine.stop()
             self.fail()
@@ -99,23 +99,20 @@ class TestEngine(unittest.TestCase):
     def test_start_ValueError_missing_handler(self):
         self.engine.set_window(self.screen)
         self.engine.set_clock(self.clock)
-        is_started = self.engine.start()
-        self.assertFalse(is_started)
-        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
+        debug_msg = self.engine.start()
+        self.assertTrue(debug_msg == 'Exit the system')
 
     def test_start_engine_ValueError_window_missing(self):
         self.engine.set_clock(self.clock)
         self.engine.set_event_handler(self.handler)
-        is_started = self.engine.start()
-        self.assertFalse(is_started)
-        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
+        debug_msg = self.engine.start()
+        self.assertTrue(debug_msg == 'Exit the system')
 
     def test_start_engine_ValueError_clock_missing(self):
         self.engine.set_window(self.screen)
         self.engine.set_event_handler(self.handler)
-        is_started = self.engine.start()
-        self.assertFalse(is_started)
-        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
+        debug_msg = self.engine.start()
+        self.assertTrue(debug_msg == 'Exit the system')
 
 
 if __name__ == '__main__':

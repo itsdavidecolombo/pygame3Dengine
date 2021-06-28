@@ -5,9 +5,10 @@
 # @Description: The main method of the application: here all the objects are instantiated and then the engine is started
 #
 #################################################
-from cube3d.screen import Window
-from cube3d.engine import GameEngine, EventHandler, Clock
 from cube3d.data_model import Cube
+from cube3d.screen import Window
+from cube3d.event import EventHandler
+from cube3d.engine import GameEngine, Clock
 from cube3d.board import GameBoard
 
 def run():
