@@ -20,19 +20,19 @@ class EventHandler:
             if event.type == pygame.QUIT:
                 self.__quit_engine()
 
-            # KEYDOWN EVENTS
+            # KEY DOWN EVENTS
             if event.type == pygame.KEYDOWN:
-                self.__handle_keydown(event)
+                self.__handle_key_down(event)
 
-            # KEYUP EVENTS
+            # KEY UP EVENTS
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_j:
                     pass
 
         return True
 
-# ============================= HANDLE KEYDOWN METHOD =============================
-    def __handle_keydown(self, event):
+# ============================= HANDLE KEY DOWN METHOD =============================
+    def __handle_key_down(self, event):
         feed = True
         if event.key == pygame.K_x:
             feed = feed and self.board.rotate_x()

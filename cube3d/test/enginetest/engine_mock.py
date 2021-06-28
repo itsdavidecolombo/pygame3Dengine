@@ -2,8 +2,8 @@
 #
 # @Author: davidecolombo
 # @Date: lun, 28-06-2021, 10:42
-# @Description: ENTER DESCRIPTION HERE ...
-# @Source: ENTER THE SOURCE HERE ...
+# @Description: The EngineMock class that fakes the implementations of the start and stop methods of the Game Engine
+#               for making testing simpler without using threads that have an unpredictable behaviour.
 #
 #################################################
 from cube3d.engine import GameEngine, EngineState
@@ -13,8 +13,8 @@ def make_engine_mock():
 
 class EngineMock(GameEngine):
 
-    def __init__(self, fps: int = 10, window = None):
-        super().__init__(fps, window)
+    def __init__(self, window = None, clock = None):
+        super().__init__(clock = clock, window = window)
 
     def start(self):
         if self.window is None:
@@ -25,6 +25,9 @@ class EngineMock(GameEngine):
 
         if self.handler is None:
             raise ValueError(f'Cannot start the Game Engine without the reference for the event handler')
+
+        if self.clock is None:
+            raise ValueError(f'Cannot start the Game Engine without the reference to the clock object')
 
         self._engine_state = EngineState.Running
         print('Opening the window')

@@ -11,7 +11,7 @@ import time
 import pygame
 import sys
 from cube3d.screen import Window
-from cube3d.engine import EventHandler
+from cube3d.engine import EventHandler, Clock
 
 class EngineState(Enum):
     Created = 'created'
@@ -21,19 +21,23 @@ class EngineState(Enum):
 ############################## GAME ENGINE CLASS ##############################
 class GameEngine(threading.Thread):
 
-    def __init__(self, fps: int = 30, window: Window = None, handler: EventHandler = None):
+    def __init__(self,
+                 clock: Clock = None,
+                 window: Window = None,
+                 handler: EventHandler = None):
         super().__init__()
         self.handler = handler
         self.window  = window
-        self._fps    = fps
-        self._tick_length_nanoseconds = int((1 / fps) * 1e9)
+        self.clock   = clock
         self._elapsed_nanoseconds = time.time_ns()
         self._engine_state = EngineState.Created
         self._stop_event   = threading.Event()
 
-    def set_fps(self, fps: int) -> None:
-        self._fps = fps
-        self._tick_length_nanoseconds = int((1 / fps) * 1e9)
+    def set_clock(self, clock: Clock) -> bool:
+        if self.clock is not None:
+            raise ValueError(f'Game Engine already has a reference to Clock object')
+        self.clock = clock
+        return True
 
     def set_window(self, window: Window) -> bool:
         if self.window is not None:
@@ -58,10 +62,13 @@ class GameEngine(threading.Thread):
 
     def start(self):
         if self.window is None:
-            raise ValueError(f'Cannot start the Game Engine without the reference for the screen')
+            raise ValueError(f'Cannot start the Game Engine without the reference to the window object')
 
         if self.handler is None:
-            raise ValueError(f'Cannot start the Game Engine without the reference for the event handler')
+            raise ValueError(f'Cannot start the Game Engine without the reference to the event handler object')
+
+        if self.clock is None:
+            raise ValueError(f'Cannot start the Game Engine without the reference to the clock object')
 
         if self._engine_state != EngineState.Created:
             raise ValueError(f'Cannot start engine: current engine state is {self._engine_state}')
@@ -76,8 +83,7 @@ class GameEngine(threading.Thread):
 
     def run(self):
         while not self._stop_event.is_set():
-            if self._elapsed_nanoseconds < self._tick_length_nanoseconds:
-                time.sleep(float(self._tick_length_nanoseconds - self._elapsed_nanoseconds) / 1e9)
+            time.sleep(self.clock.get_pause_seconds(elapsed_nano = self._elapsed_nanoseconds))
             self.__on_clock_tick()
         self.__safe_shut_down()
         return
