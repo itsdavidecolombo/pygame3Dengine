@@ -16,12 +16,11 @@ from cube3d.data_model import Cube
 class TestHandler(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.engine  = engine_mock.make_engine_mock()
         self.guard_mock = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(self.engine)
-        self.engine.set_guard(self.guard_mock)
-        self.board   = GameBoard(self.engine)
+        self.board = GameBoard(Cube())
         self.handler = handler_mock.make_handler_mock(board = self.board, guard = self.guard_mock)
+        self.engine  = engine_mock.make_engine_mock(clock = None, window = None, guard = self.guard_mock, handler = self.handler)
+        self.guard_mock.set_engine(self.engine)
 
     def tearDown(self) -> None:
         pass
@@ -32,20 +31,14 @@ class TestHandler(unittest.TestCase):
         self.assertTrue(self.handler.guard is not None)
 
     def test_ok_event_handling(self):
-        self.board.set_player(Cube())
         events = ['ok']
         res = self.handler.handle_events(events)
         self.assertTrue(res == 'ok_event')
 
-    def test_quit_when_player_is_missing(self):
-        events = ['ok']
-        res = self.handler.handle_events(events)
-        self.assertTrue(res == 'quit_event')
-
     def test_quit_event_handling(self):
         events = ['quit']
         res = self.handler.handle_events(events)
-        self.assertTrue(res == 'quit_event')
+        self.assertTrue(res == 'Exit the system quit_event')
 
 
 if __name__ == '__main__':

@@ -24,8 +24,8 @@ class EventHandlerMock(EventHandler):
             self.events = events
         for event in self.events:
             if event == EventHandlerMock.QUIT:
-                self.guard.safe_shut_down()
-                return 'quit_event'
+                debug = self.guard.safe_shut_down()
+                return debug + ' quit_event'
             elif event == EventHandlerMock.OK:
                 feed = True
                 feed = feed and self.board.rotate_x()

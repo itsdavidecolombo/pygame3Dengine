@@ -8,17 +8,9 @@
 
 class GameBoard:
 
-    def __init__(self, engine, player = None, creatures: list = None):
-        self.engine = engine
+    def __init__(self, player, creatures: list = None):
         self.player = player
         self.creatures = _init_list(creatures)
-
-    def set_player(self, player) -> bool:
-        if self.player is not None:
-            # TODO log warning message
-            return False
-        self.player = player
-        return True
 
     def add_creature(self, to_add) -> bool or ValueError:
         for c in self.creatures:

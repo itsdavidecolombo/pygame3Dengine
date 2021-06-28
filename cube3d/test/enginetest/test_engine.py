@@ -16,103 +16,77 @@ from cube3d.screen import Window
 class TestEngine(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.engine  = engine_mock.make_engine_mock()
+        self.clock = Clock(fps = 30)
+        self.screen = Window('Engine Test', width = 800, height = 600)
         self.guard_mock = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(self.engine)
-        self.engine.set_guard(self.guard_mock)
-        self.clock   = Clock(fps = 30)
-        self.screen  = Window('Engine Test', width = 800, height = 600)
         self.handler = handler_mock.make_handler_mock(board = None, guard = self.guard_mock)
+        self.engine  = None
 
     def tearDown(self) -> None:
         if self.engine.is_alive():
             self.engine.stop()
 
-    def test_create_engine(self):
-        self.engine.set_clock(self.clock)
-        self.engine.set_window(self.screen)
-        self.engine.set_event_handler(self.handler)
-        self.engine.set_guard(self.guard_mock)
+    def test_start_and_stop_successfully(self):
+        self.engine = engine_mock.make_engine_mock(clock = self.clock,
+                                                   window = self.screen,
+                                                   guard = self.guard_mock,
+                                                   handler = self.handler)
+        self.guard_mock.set_engine(self.engine)
         is_started = self.engine.start()
         self.assertTrue(is_started)
         self.assertTrue(self.engine.get_engine_state() == EngineState.Running)
         debug_msg = self.engine.stop()
-        self.assertTrue(debug_msg == 'Stopping the engine ')
-        self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
+        self.assertTrue(debug_msg == 'Stopping the engine Change engine state Closing the window Quitting pygame Exit the system')
 
 # =========================== START AND STOP TESTS ===========================
-    def test_start_engine_ValueError_already_started(self):
-        self.engine.set_clock(self.clock)
-        self.engine.set_window(self.screen)
-        self.engine.set_event_handler(self.handler)
-        self.engine.start()
+    def test_should_safe_shut_down_when_already_started(self):
+        self.engine = engine_mock.make_engine_mock(clock = self.clock,
+                                                   window = self.screen,
+                                                   guard = self.guard_mock,
+                                                   handler = self.handler)
+        self.guard_mock.set_engine(self.engine)
+        is_started = self.engine.start()
+        self.assertTrue(is_started)
         self.assertTrue(self.engine.get_engine_state() == EngineState.Running)
         debug_msg = self.engine.start()
-        self.assertTrue(debug_msg == 'Stopping the engine Closing the window Quitting pygame Exit the system')
+        self.assertTrue(debug_msg == 'Stopping the engine Change engine state Closing the window Quitting pygame Exit the system')
 
-    def test_stop_engine_ValueError_stop_before_starting(self):
-        try:
-            self.engine.stop()
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
+    def test_stop_engine_before_starting(self):
+        self.engine = engine_mock.make_engine_mock(clock = self.clock,
+                                                   window = self.screen,
+                                                   guard = self.guard_mock,
+                                                   handler = self.handler)
+        self.guard_mock.set_engine(self.engine)
+        debug = self.engine.stop()
+        self.assertTrue(debug == 'Exit the system')
 
 # =========================== SETTER TESTS ===========================
-    def test_set_window(self):
-        is_set = self.engine.set_window(self.screen)
-        self.assertTrue(is_set)
+    def test_should_safe_shut_down_if_window_is_none(self):
+        self.engine = engine_mock.make_engine_mock(clock = self.clock,
+                                                   window = None,
+                                                   guard = self.guard_mock,
+                                                   handler = self.handler)
+        self.guard_mock.set_engine(self.engine)
+        debug = self.engine.start()
+        self.assertTrue(debug == 'Exit the system')
 
-    def test_set_window_ValueError_already_exists(self):
-        is_set = self.engine.set_window(self.screen)
-        self.assertTrue(is_set)
-        try:
-            self.engine.set_window(self.screen)
-        except ValueError as ex:
-            print(ex.__str__())
+    def test_should_safe_shut_down_if_handler_is_none(self):
+        self.engine = engine_mock.make_engine_mock(clock = self.clock,
+                                                   window = self.screen,
+                                                   guard = self.guard_mock,
+                                                   handler = None)
+        self.guard_mock.set_engine(self.engine)
+        debug = self.engine.start()
+        self.assertTrue(debug == 'Exit the system')
 
-    def test_set_event_handler(self):
-        is_set = self.engine.set_event_handler(self.handler)
-        self.assertTrue(is_set)
-
-    def test_set_event_handler_ValueError_already_set(self):
-        is_set = self.engine.set_event_handler(self.handler)
-        self.assertTrue(is_set)
-        try:
-            self.engine.set_event_handler(self.handler)
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
-
-    def test_set_clock(self):
-        is_set = self.engine.set_clock(self.clock)
-        self.assertTrue(is_set)
-
-    def test_set_clock_ValueError(self):
-        self.engine.set_clock(self.clock)
-        try:
-            self.engine.set_clock(self.clock)
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
-
-# =========================== MISSING TESTS ===========================
-    def test_start_ValueError_missing_handler(self):
-        self.engine.set_window(self.screen)
-        self.engine.set_clock(self.clock)
-        debug_msg = self.engine.start()
-        self.assertTrue(debug_msg == 'Exit the system')
-
-    def test_start_engine_ValueError_window_missing(self):
-        self.engine.set_clock(self.clock)
-        self.engine.set_event_handler(self.handler)
-        debug_msg = self.engine.start()
-        self.assertTrue(debug_msg == 'Exit the system')
-
-    def test_start_engine_ValueError_clock_missing(self):
-        self.engine.set_window(self.screen)
-        self.engine.set_event_handler(self.handler)
-        debug_msg = self.engine.start()
-        self.assertTrue(debug_msg == 'Exit the system')
+    def test_should_safe_shut_down_if_clock_is_none(self):
+        self.engine = engine_mock.make_engine_mock(clock = None,
+                                                   window = self.screen,
+                                                   guard = self.guard_mock,
+                                                   handler = self.handler)
+        self.guard_mock.set_engine(self.engine)
+        debug = self.engine.start()
+        self.assertTrue(debug == 'Exit the system')
 
 
 if __name__ == '__main__':

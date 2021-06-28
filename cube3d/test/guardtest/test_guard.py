@@ -12,15 +12,15 @@ from cube3d.test.guardtest import guard_mock
 from cube3d.screen import Window
 from cube3d.board import GameBoard
 from cube3d.engine import Clock
+from cube3d.data_model import Cube
 
 class TestGuard(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.engine_mock = engine_mock.make_engine_mock()
-        self.guard_mock  = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(self.engine_mock)
-        self.engine_mock.set_guard(self.guard_mock)
-        self.board = GameBoard(self.engine_mock)
+        self.guard_mock = guard_mock.make_guard_mock()
+        self.clock = Clock()
+        self.window = Window('test')
+        self.board = GameBoard(Cube())
         self.handler_mock = handler_mock.make_handler_mock(board = self.board, guard = self.guard_mock)
 
     def tearDown(self) -> None:
@@ -28,27 +28,46 @@ class TestGuard(unittest.TestCase):
 
     def test_default_guard(self):
         self.assertTrue(self.guard_mock is not None)
-        self.assertTrue(self.guard_mock.engine is not None)
+        self.assertTrue(self.guard_mock.engine is None)
 
     def test_engine_ready_to_start(self):
+        self.engine_mock = engine_mock.make_engine_mock(clock = None,
+                                                        window = self.window,
+                                                        guard = self.guard_mock,
+                                                        handler = self.handler_mock)
+        self.guard_mock.set_engine(self.engine_mock)
         is_ready = self.guard_mock.engine_is_ready_to_start()
         self.assertFalse(is_ready)
 
     def test_should_not_stop_engine_when_not_started(self):
-        self.engine_mock.set_window(Window('test'))
-        self.engine_mock.set_event_handler(self.handler_mock)
-        self.engine_mock.set_clock(Clock(fps = 30))
+        self.engine_mock = engine_mock.make_engine_mock(clock = self.clock,
+                                                        window = self.window,
+                                                        guard = self.guard_mock,
+                                                        handler = self.handler_mock)
+        self.guard_mock.set_engine(self.engine_mock)
         debug_msg = self.guard_mock.safe_shut_down()
         self.assertTrue(debug_msg == 'Exit the system')
 
     def test_safe_shut_down(self):
-        self.engine_mock.set_window(Window('test'))
-        self.engine_mock.set_event_handler(self.handler_mock)
-        self.engine_mock.set_clock(Clock(fps = 30))
+        self.engine_mock = engine_mock.make_engine_mock(clock = self.clock,
+                                                        window = self.window,
+                                                        guard = self.guard_mock,
+                                                        handler = self.handler_mock)
+        self.guard_mock.set_engine(self.engine_mock)
         is_started = self.engine_mock.start()
         self.assertTrue(is_started)
         debug_msg = self.guard_mock.safe_shut_down()
-        self.assertTrue(debug_msg == 'Stopping the engine Closing the window Quitting pygame Exit the system')
+        self.assertTrue(debug_msg == 'Stopping the engine Change engine state Closing the window Quitting pygame Exit the system')
+
+    def test_set_none_engine(self):
+        self.engine_mock = engine_mock.make_engine_mock(clock = self.clock,
+                                                        window = self.window,
+                                                        guard = self.guard_mock,
+                                                        handler = self.handler_mock)
+        self.guard_mock.set_engine(None)
+        debug = self.engine_mock.start()
+        self.assertTrue(debug == 'Exit the system')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -11,10 +11,17 @@ import sys
 
 class EngineGuard:
 
-    def __init__(self, engine):
+    def __init__(self, engine = None):
+        self.engine = engine
+
+    # TODO check consistency
+    def set_engine(self, engine):
         self.engine = engine
 
     def engine_is_ready_to_start(self) -> bool:
+        if self.engine is None:
+            return False
+
         if self.engine.window is None:
             print(f'Cannot start the Game Engine without the reference to the window object')
             return False
@@ -32,9 +39,11 @@ class EngineGuard:
             return True
 
     def safe_shut_down(self):
-        print(f'[Safe shut down the engine ...]')
-        if self.engine.get_engine_state() == EngineState.Running:
-            self.engine.stop()
-            self.engine.window.close()
-            pygame.quit()
+        if self.engine is not None:
+            print(f'[Safe shut down the engine ...]')
+            if self.engine.get_engine_state() == EngineState.Running:
+                self.engine.set_stop_event()
+                self.engine.set_engine_state(EngineState.Destroyed)
+                self.engine.window.close()
+                pygame.quit()
         sys.exit()
