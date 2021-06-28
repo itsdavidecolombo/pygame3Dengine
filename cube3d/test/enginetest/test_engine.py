@@ -9,6 +9,7 @@ import unittest
 from cube3d.engine import EngineState, Clock
 from cube3d.test.handlertest import handler_mock
 from cube3d.test.enginetest import engine_mock
+from cube3d.test.guardtest import guard_mock
 from cube3d.screen import Window
 
 ############################## GAME ENGINE TEST CLASS ##############################
@@ -16,9 +17,11 @@ class TestEngine(unittest.TestCase):
 
     def setUp(self) -> None:
         self.engine  = engine_mock.make_engine_mock()
+        self.guard_mock = guard_mock.make_guard_mock()
+        self.guard_mock.set_engine(self.engine)
         self.clock   = Clock(fps = 30)
         self.screen  = Window('Engine Test', width = 800, height = 600)
-        self.handler = handler_mock.make_handler_mock(board = None, engine = self.engine)
+        self.handler = handler_mock.make_handler_mock(board = None, guard = self.guard_mock)
 
     def tearDown(self) -> None:
         if self.engine.is_alive():
@@ -28,9 +31,12 @@ class TestEngine(unittest.TestCase):
         self.engine.set_clock(self.clock)
         self.engine.set_window(self.screen)
         self.engine.set_event_handler(self.handler)
-        self.engine.start()
+        self.engine.set_guard(self.guard_mock)
+        is_started = self.engine.start()
+        self.assertTrue(is_started)
         self.assertTrue(self.engine.get_engine_state() == EngineState.Running)
-        self.engine.stop()
+        is_stopped = self.engine.stop()
+        self.assertTrue(is_stopped)
         self.assertTrue(self.engine.get_engine_state() == EngineState.Destroyed)
 
 # =========================== START AND STOP TESTS ===========================

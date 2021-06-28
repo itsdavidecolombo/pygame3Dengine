@@ -21,7 +21,7 @@ class TestGuard(unittest.TestCase):
         self.guard_mock.set_engine(self.engine_mock)
         self.engine_mock.set_guard(self.guard_mock)
         self.board = GameBoard(self.engine_mock)
-        self.handler_mock = handler_mock.make_handler_mock(self.board, self.engine_mock)
+        self.handler_mock = handler_mock.make_handler_mock(board = self.board, guard = self.guard_mock)
 
     def tearDown(self) -> None:
         pass
@@ -33,6 +33,13 @@ class TestGuard(unittest.TestCase):
     def test_engine_ready_to_start(self):
         is_ready = self.guard_mock.engine_is_ready_to_start()
         self.assertFalse(is_ready)
+
+    def test_should_not_stop_engine_when_not_started(self):
+        self.engine_mock.set_window(Window('test'))
+        self.engine_mock.set_event_handler(self.handler_mock)
+        self.engine_mock.set_clock(Clock(fps = 30))
+        is_stopped = self.guard_mock.safe_shut_down()
+        self.assertTrue(is_stopped)
 
     def test_safe_shut_down(self):
         self.engine_mock.set_window(Window('test'))

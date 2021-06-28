@@ -33,7 +33,8 @@ class EngineGuard:
 
     def safe_shut_down(self):
         print(f'[Safe shut down the engine ...]')
-        self.engine.stop()
-        self.engine.window.close()
-        pygame.quit()
+        if self.engine.get_engine_state() == EngineState.Running:
+            self.engine.stop()
+            self.engine.window.close()
+            pygame.quit()
         sys.exit()

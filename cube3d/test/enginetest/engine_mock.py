@@ -29,12 +29,13 @@ class EngineMock(GameEngine):
         print('Engine is running')
         return True
 
-    def stop(self):
+    def stop(self) -> bool:
         if self._engine_state != EngineState.Running:
             raise ValueError(f'Cannot stop engine: current engine state is {self._engine_state}')
         print('Closing the window')
         print('Engine is stopped')
         self._engine_state = EngineState.Destroyed
+        return True
 
     def is_alive(self) -> bool:
         return self._engine_state == EngineState.Running

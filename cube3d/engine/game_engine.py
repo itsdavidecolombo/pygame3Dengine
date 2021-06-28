@@ -49,8 +49,6 @@ class GameEngine(threading.Thread):
         return self._engine_state
 
     def stop(self):
-        if self._engine_state != EngineState.Running:
-            raise ValueError(f'Cannot stop engine: current engine state is {self._engine_state}')
         self._stop_event.set()
         self._engine_state = EngineState.Destroyed
 

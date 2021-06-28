@@ -31,7 +31,7 @@ def run():
     board.set_player(player)
 
     # CREATE EVENT HANDLER
-    handler = EventHandler(engine, board)
+    handler = EventHandler(guard = engine.guard, board = board)
     engine.set_event_handler(handler)
 
     # START
