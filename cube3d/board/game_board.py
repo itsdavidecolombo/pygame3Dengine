@@ -10,8 +10,14 @@ import logging
 class GameBoard:
 
     def __init__(self, player, creatures: list = None):
-        self.player = player
+        self.__safe_init_player(player)
         self.creatures = _init_list(creatures)
+
+    def __safe_init_player(self, player):
+        if player is None:
+            logging.log(level = logging.ERROR, msg = f'Cannot create the Game Board: player is None')
+            raise ValueError(f'')
+        self.player = player
 
     def add_creature(self, to_add) -> bool:
         for c in self.creatures:
@@ -30,27 +36,15 @@ class GameBoard:
         return False
 
     def rotate_x(self) -> bool:
-        if not self.__check_before_rotate():
-            return False
         print('rotate cube around x axis')
         return True
 
     def rotate_y(self) -> bool:
-        if not self.__check_before_rotate():
-            return False
         print('rotate cube around y axis')
         return True
 
     def rotate_z(self) -> bool:
-        if not self.__check_before_rotate():
-            return False
         print('rotate cube around z axis')
-        return True
-
-    def __check_before_rotate(self) -> bool:
-        if self.player is None:
-            logging.log(level = logging.WARNING, msg = f'Cannot set player: player is not None')
-            return False
         return True
 
 # ========================= MODULE FUNCTIONS =========================

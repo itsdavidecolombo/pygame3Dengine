@@ -23,6 +23,13 @@ class TestGameBoard(unittest.TestCase):
         self.assertTrue(self.board.player is not None)
         self.assertTrue(len(self.board.creatures) == 0)
 
+    def test_should_raise_ValueError_if_player_is_none(self):
+        try:
+            GameBoard(player = None)
+            self.fail()
+        except ValueError:
+            self.assertTrue(True)
+
     def test_add_creature(self):
         self.board.add_creature(self.to_add)
         self.assertTrue(len(self.board.creatures) == 1)
