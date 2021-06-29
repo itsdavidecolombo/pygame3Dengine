@@ -68,6 +68,17 @@ class TestGuard(unittest.TestCase):
         debug = self.engine_mock.start()
         self.assertTrue(debug == 'Exit the system')
 
+    def test_should_return_false_when_set_twice(self):
+        self.engine_mock = engine_mock.make_engine_mock(clock = self.clock,
+                                                        window = self.window,
+                                                        guard = self.guard_mock,
+                                                        handler = self.handler_mock)
+        is_set = self.guard_mock.set_engine(self.engine_mock)
+        self.assertTrue(is_set)
+        is_set = self.guard_mock.set_engine(self.engine_mock)
+        self.assertFalse(is_set)
+
+
 
 if __name__ == '__main__':
     unittest.main()

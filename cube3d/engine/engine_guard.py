@@ -14,9 +14,12 @@ class EngineGuard:
     def __init__(self, engine = None):
         self.engine = engine
 
-    # TODO check consistency
-    def set_engine(self, engine):
+    def set_engine(self, engine) -> bool:
+        if self.engine is not None:
+            # TODO log warning message
+            return False
         self.engine = engine
+        return True
 
     def engine_is_ready_to_start(self) -> bool:
         if self.engine is None:
