@@ -1,3 +1,4 @@
+from cube3d import logger
 from cube3d import board
 from cube3d import data_model
 from cube3d import engine

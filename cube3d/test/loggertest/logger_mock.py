@@ -16,6 +16,8 @@ class LoggerMock(Logger):
         super().__init__(guard)
 
     def log(self, level: LoggerLevel, msg: str = '') -> str:
+        debug = ''
         if level == LoggerLevel.Severe:
-            return self.guard.safe_shut_down()
+            debug += 'Level Severe received Exit the system'
+            return debug
         return msg

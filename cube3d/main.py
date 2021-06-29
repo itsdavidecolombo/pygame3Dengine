@@ -38,7 +38,7 @@ def run():
     handler = EventHandler(board = board, logger = logger)
 
     # CREATE GAME ENGINE
-    engine = GameEngine(clock = clock, window = window, guard = guard, handler = handler, logger = logger)
+    engine = GameEngine(clock = clock, window = window, handler = handler, logger = logger)
     guard.set_engine(engine)
 
     # START
