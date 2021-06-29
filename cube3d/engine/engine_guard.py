@@ -16,49 +16,49 @@ class EngineGuard:
         self.engine = engine
         self.logger = logger
 
-    def set_engine(self, engine) -> bool:
+    # TODO remove set engine and force engine in constructor
+    def set_engine(self, engine):
         if self.engine is not None:
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: engine is not None...')
-            return False
         self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Setting the engine...')
         self.engine = engine
-        return True
 
-    def set_logger(self, logger) -> bool:
+    def set_logger(self, logger):
         if self.logger is not None:
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: logger is not None...')
-            return False
-
-        if logger is None:
-            raise ValueError(f'EngineGuard: cannot start the application without a valid logger...')
-
         self.logger = logger
         self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Setting the logger...')
-        return True
 
-    def engine_is_ready_to_start(self) -> bool:
+    def safe_start(self):
+        if self.logger is None:
+            raise ValueError(f'EngineGuard: cannot start the application without a valid logger...')
         if self.engine is None:
-            self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: engine is None...')
-            return False
+            raise ValueError(f'EngineGuard: cannot start the application without a valid engine...')
 
+        self.__check_engine()
+        self.__start_engine()
+
+    def __check_engine(self):
+        self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Checking engine before starting...')
         if self.engine.window is None:
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: window is None...')
-            return False
         elif self.engine.handler is None:
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: event handler is None...')
-            return False
         elif self.engine.clock is None:
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: clock is None...')
-            return False
         elif self.engine.is_alive():
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: engine is already started...')
-            return False
         elif self.engine.is_stopped():
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: engine is already stopped...')
-            return False
         else:
             self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: engine is ready to start...')
-            return True
+
+    def __start_engine(self):
+        self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Starting the engine...')
+        pygame.init()
+        # self.__DISPLAY = self.window.open()
+        self.engine.set_engine_state(EngineState.Running)
+        self.engine.run()
 
     def safe_shut_down(self):
         if self.engine is not None:

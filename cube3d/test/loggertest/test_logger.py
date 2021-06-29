@@ -34,10 +34,6 @@ class TestLogger(unittest.TestCase):
     def tearDown(self) -> None:
         pass
 
-    def test_make_logger(self):
-        self.assertTrue(self.logger is not None)
-        self.assertTrue(self.logger.guard is not None)
-
     def test_call_safe_shut_down_when_log_severe(self):
         msg = self.logger.log(level = logger_mock.LoggerLevel.Severe, msg = 'something happen')
         self.assertTrue(msg == 'Exit the system')

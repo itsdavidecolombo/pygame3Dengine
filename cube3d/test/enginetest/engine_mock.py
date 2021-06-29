@@ -8,29 +8,16 @@
 #################################################
 from cube3d.engine import GameEngine, EngineState
 
-def make_engine_mock(clock, window, guard, handler):
-    return EngineMock(clock = clock, window = window, guard = guard, handler = handler)
+def make_engine_mock(clock, window, handler):
+    return EngineMock(clock = clock, window = window, handler = handler)
 
 class EngineMock(GameEngine):
 
-    def __init__(self, window = None, clock = None, guard = None, handler = None, logger = None):
-        super().__init__(clock = clock, window = window, guard = guard, handler = handler, logger = logger)
-
-    def set_logger(self, logger):
-        self.logger = logger
+    def __init__(self, window = None, clock = None, handler = None, logger = None):
+        super().__init__(clock = clock, window = window, handler = handler, logger = logger)
 
     def get_engine_state(self) -> EngineState:
         return self._engine_state
-
-    def start(self) -> str:
-        debug = ''
-        if not self.guard.engine_is_ready_to_start():
-            return self.guard.safe_shut_down()
-        self._engine_state = EngineState.Running
-        debug += 'Init pygame '
-        debug += 'Opening the window '
-        debug += 'Engine is running'
-        return debug
 
     def is_alive(self) -> bool:
         return self._engine_state == EngineState.Running
