@@ -35,17 +35,13 @@ class EventHandler:
 
 # ============================= HANDLE KEY DOWN METHOD =============================
     def __handle_key_down(self, event):
-        feed = True
         if event.key == pygame.K_x:
-            feed = feed and self.board.rotate_x()
+            self.board.rotate_x()
         elif event.key == pygame.K_y:
-            feed = feed and self.board.rotate_y()
+            self.board.rotate_y()
         elif event.key == pygame.K_z:
-            feed = feed and self.board.rotate_z()
+            self.board.rotate_z()
         elif event.key == pygame.K_ESCAPE:
-            self.__quit_engine()
-
-        if not feed:
             self.__quit_engine()
 
 # ============================= QUIT ENGINE METHOD =============================

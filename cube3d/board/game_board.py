@@ -10,15 +10,19 @@ from cube3d.logger import Logger, LoggerLevel
 class GameBoard:
 
     def __init__(self, player, logger: Logger, creatures: list = None):
-        self.logger = logger
-        self.__safe_init_player(player)
+        self.logger = self.__safe_init_logger(logger)
+        self.player = self.__safe_init_player(player)
         self.creatures = self.__safe_init_list(creatures)
 
     def __safe_init_player(self, player):
         if player is None:
-            self.logger.log(level = LoggerLevel.Severe, msg = 'GameBoard: player is None...')
-        self.logger.log(level = LoggerLevel.Debug, msg = 'GameBoard: setting the player...')
-        self.player = player
+            raise ValueError('GameBoard: player is None...')
+        return player
+
+    def __safe_init_logger(self, logger):
+        if logger is None:
+            raise ValueError('GameBoard: cannot start the game without a valid logger...')
+        return logger
 
     def __safe_init_list(self, creatures):
         if creatures is None:
@@ -27,11 +31,12 @@ class GameBoard:
         set_of_el = set()
         for c in creatures:
             if c in set_of_el:
-                self.logger.log(level = LoggerLevel.Severe, msg = 'GameBoard: creature list contains duplicates...')
+                raise ValueError('GameBoard: list of creature contains duplicates...')
             else:
                 set_of_el.add(c)
         return creatures
 
+# =================================== OTHER METHODS ===================================
     def add_creature(self, to_add) -> bool:
         for c in self.creatures:
             if c == to_add:
@@ -50,14 +55,11 @@ class GameBoard:
         self.logger.log(level = LoggerLevel.Warning, msg = 'GameBoard: creature not removed because not found...')
         return False
 
-    def rotate_x(self) -> bool:
+    def rotate_x(self):
         self.logger.log(level = LoggerLevel.Debug, msg = 'GameBoard: rotate cube around x axis...')
-        return True
 
-    def rotate_y(self) -> bool:
+    def rotate_y(self):
         self.logger.log(level = LoggerLevel.Debug, msg = 'GameBoard: rotate cube around y axis...')
-        return True
 
-    def rotate_z(self) -> bool:
+    def rotate_z(self):
         self.logger.log(level = LoggerLevel.Debug, msg = 'GameBoard: rotate cube around z axis...')
-        return True
