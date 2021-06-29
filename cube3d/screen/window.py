@@ -10,13 +10,13 @@ from typing import ClassVar
 import logging
 
 class Window:
-    _DEFAULT_WIDTH:  ClassVar[int] = 800
-    _DEFAULT_HEIGHT: ClassVar[int] = 600
+    DEFAULT_WIDTH:  ClassVar[int] = 800
+    DEFAULT_HEIGHT: ClassVar[int] = 600
 
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
 
-    def __init__(self, title: str = None, width: int = _DEFAULT_WIDTH, height: int = _DEFAULT_HEIGHT):
+    def __init__(self, title: str = None, width: int = DEFAULT_WIDTH, height: int = DEFAULT_HEIGHT):
         self.title     = title
         self.width     = width
         self.height    = height

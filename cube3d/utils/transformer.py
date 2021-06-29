@@ -7,14 +7,16 @@
 #################################################
 import math
 import numpy as np
+import logging
 from cube3d.data_model.tri4d import Tri4d, Point4d
+from cube3d.screen import Window
 
 class Transformer:
     Z_NEAR: float = 0.1
     Z_FAR: float  = 1000.0
     FOV_ANGLE_DEG: float = 90.0
     FOV_RADIANS: float   = 1.0 / math.tan((FOV_ANGLE_DEG / 2) / 180.0 * math.pi)
-    ASPECT_RATIO: float  = 0.0          # TODO initialize aspect ratio as ScreenHeight / ScreenWidth
+    ASPECT_RATIO: float  = float(Window.DEFAULT_HEIGHT) / float(Window.DEFAULT_WIDTH)
     PROJECTION_MATRIX: np.ndarray
 
     @staticmethod
@@ -28,6 +30,9 @@ class Transformer:
 
     @staticmethod
     def set_aspect_ratio(aspect: float):
+        if aspect == 0.0:
+            logging.log(level = logging.ERROR, msg = f'Aspect ratio is zero')
+            raise ValueError(f'Aspect ratio is equal to zero')
         Transformer.ASPECT_RATIO = 1 / aspect
 
     @staticmethod
