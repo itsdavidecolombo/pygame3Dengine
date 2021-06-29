@@ -19,5 +19,14 @@ class EngineMock(GameEngine):
     def get_engine_state(self) -> EngineState:
         return self._engine_state
 
+    def set_engine_state(self, to_: EngineState) -> str:
+        debug = ''
+        if not EngineState.is_allowed_state_transition(self._engine_state, to_):
+            debug += 'Error changing state Exit the system'
+            return debug
+        self._engine_state = to_
+        debug += f'New state is {to_}'
+        return debug
+
     def is_alive(self) -> bool:
         return self._engine_state == EngineState.Running
