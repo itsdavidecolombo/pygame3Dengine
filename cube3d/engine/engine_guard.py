@@ -6,6 +6,7 @@
 #
 #################################################
 from cube3d.engine import EngineState
+import logging
 import pygame
 import sys
 
@@ -16,7 +17,7 @@ class EngineGuard:
 
     def set_engine(self, engine) -> bool:
         if self.engine is not None:
-            # TODO log warning message
+            logging.log(level = logging.WARNING, msg = f'Cannot set engine: engine is not None')
             return False
         self.engine = engine
         return True
@@ -26,27 +27,34 @@ class EngineGuard:
             return False
 
         if self.engine.window is None:
-            print(f'Cannot start the Game Engine without the reference to the window object')
+            logging.log(level = logging.WARNING,
+                        msg = f'Cannot start the Game Engine without the reference to the window object')
             return False
         elif self.engine.handler is None:
-            print(f'Cannot start the Game Engine without the reference to the event handler object')
+            logging.log(level = logging.WARNING,
+                        msg = f'Cannot start the Game Engine without the reference to the header object')
             return False
         elif self.engine.clock is None:
-            print(f'Cannot start the Game Engine without the reference to the clock object')
+            logging.log(level = logging.WARNING,
+                        msg = f'Cannot start the Game Engine without the reference to the clock object')
             return False
-        elif self.engine.get_engine_state() != EngineState.Created:
-            print(f'Cannot start engine: current engine state is {self.engine.get_engine_state()}')
+        elif self.engine.is_alive() or self.engine.is_stopped():
+            logging.log(level = logging.WARNING,
+                        msg = f'Cannot start the Game Engine when already alive or just stopped')
             return False
         else:
-            print(f'[Engine is ready to start ...]')
+            logging.debug(msg = f'Engine is ready to start')
             return True
 
     def safe_shut_down(self):
+        debug = ''
         if self.engine is not None:
-            print(f'[Safe shut down the engine ...]')
-            if self.engine.get_engine_state() == EngineState.Running:
+            if self.engine.is_alive():
+                debug += 'Safe shut down the engine and '
                 self.engine.set_stop_event()
-                self.engine.set_engine_state(EngineState.Destroyed)
+                self.engine.set_engine_state(to_ = EngineState.Destroyed)
                 self.engine.window.close()
                 pygame.quit()
+        debug += 'exit the system'
+        logging.debug(msg = debug)
         sys.exit()

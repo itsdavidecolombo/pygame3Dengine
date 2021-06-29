@@ -34,7 +34,7 @@ class TestEngine(unittest.TestCase):
         self.guard_mock.set_engine(self.engine)
         is_started = self.engine.start()
         self.assertTrue(is_started)
-        self.assertTrue(self.engine.get_engine_state() == EngineState.Running)
+        self.assertTrue(self.engine.is_alive())
         debug_msg = self.engine.stop()
         self.assertTrue(debug_msg == 'Stopping the engine Change engine state Closing the window Quitting pygame Exit the system')
 
@@ -87,6 +87,20 @@ class TestEngine(unittest.TestCase):
         self.guard_mock.set_engine(self.engine)
         debug = self.engine.start()
         self.assertTrue(debug == 'Exit the system')
+
+    def test_should_set_state_consistently(self):
+        self.engine = engine_mock.make_engine_mock(clock = self.clock,
+                                                   window = self.screen,
+                                                   guard = self.guard_mock,
+                                                   handler = self.handler)
+        self.guard_mock.set_engine(self.engine)
+        self.assertTrue(self.engine.get_engine_state() == EngineState.Created)
+        self.assertFalse(self.engine.set_engine_state(EngineState.Created))
+        self.engine.start()
+        self.assertTrue(self.engine.is_alive())
+        self.assertFalse(self.engine.set_engine_state(EngineState.Created))
+        self.assertFalse(self.engine.set_engine_state(EngineState.Running))
+        self.assertTrue(self.engine.set_engine_state(EngineState.Destroyed))
 
 
 if __name__ == '__main__':

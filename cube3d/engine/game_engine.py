@@ -6,11 +6,13 @@
 #
 #################################################
 import threading
+import logging
 import time
 import pygame
 from cube3d.screen import Window
 from cube3d.event import EventHandler
 from cube3d.engine import Clock, EngineState, EngineGuard
+
 
 ############################## GAME ENGINE CLASS ##############################
 class GameEngine(threading.Thread):
@@ -22,26 +24,29 @@ class GameEngine(threading.Thread):
                  handler: EventHandler):
         super().__init__()
         self.handler = handler
-        self.window  = window
-        self.clock   = clock
-        self.guard   = guard
+        self.window = window
+        self.clock = clock
+        self.guard = guard
         self._elapsed_nanoseconds = time.time_ns()
         self._engine_state = EngineState.Created
-        self._stop_event   = threading.Event()
+        self._stop_event = threading.Event()
 
-    def get_engine_state(self) -> EngineState:
-        return self._engine_state
+    def set_engine_state(self, to_: EngineState) -> bool:
+        if not EngineState.is_allowed_state_transition(from_ = self._engine_state, to_ = to_):
+            return False
+        self._engine_state = to_
+        return True
 
-    # TODO check consistency
-    def set_engine_state(self, new_state: EngineState):
-        self._engine_state = new_state
-
-    # TODO check consistency
+    # TODO all but the guard to call this method
     def set_stop_event(self):
+        logging.debug(msg = f'Setting stop event')
         self._stop_event.set()
 
     def stop(self):
         self.guard.safe_shut_down()
+
+    def is_stopped(self):
+        return self._engine_state == EngineState.Destroyed
 
     def start(self) -> bool:
         if not self.guard.engine_is_ready_to_start():
@@ -50,7 +55,11 @@ class GameEngine(threading.Thread):
         self.__init_and_run()
         return True
 
+    def is_alive(self) -> bool:
+        return (self._engine_state == EngineState.Running) or super().is_alive()
+
     def __init_and_run(self):
+        logging.debug(msg = f'Starting the engine...')
         pygame.init()
         self.__DISPLAY = self.window.open()
         self._engine_state = EngineState.Running
@@ -63,7 +72,6 @@ class GameEngine(threading.Thread):
         self.guard.safe_shut_down()
         return
 
-
     def __on_clock_tick(self):
         start_nanoseconds = time.time_ns()
 
@@ -71,7 +79,6 @@ class GameEngine(threading.Thread):
         self.handler.handle_events()
 
         # Update Objects
-
 
         # Draw Objects
         self.__DISPLAY.fill(Window.BLACK)

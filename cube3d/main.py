@@ -10,8 +10,14 @@ from cube3d.screen import Window
 from cube3d.event import EventHandler
 from cube3d.engine import GameEngine, Clock, EngineGuard
 from cube3d.board import GameBoard
+import logging
+
 
 def run():
+
+    # DEFINE THE LOGGER
+    logging.basicConfig(level = logging.DEBUG,
+                        format = '[%(levelname)s] On (%(threadName)s) capture \'%(message)s\'')
 
     # ALLOCATE RESOURCES
     player = Cube()

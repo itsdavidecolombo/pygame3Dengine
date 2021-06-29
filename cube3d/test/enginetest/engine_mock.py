@@ -16,6 +16,9 @@ class EngineMock(GameEngine):
     def __init__(self, window = None, clock = None, guard = None, handler = None):
         super().__init__(clock = clock, window = window, guard = guard, handler = handler)
 
+    def get_engine_state(self) -> EngineState:
+        return self._engine_state
+
     def start(self) -> str:
         debug = ''
         if not self.guard.engine_is_ready_to_start():

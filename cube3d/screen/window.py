@@ -7,6 +7,7 @@
 #################################################
 import pygame
 from typing import ClassVar
+import logging
 
 class Window:
     _DEFAULT_WIDTH:  ClassVar[int] = 800
@@ -34,7 +35,8 @@ class Window:
 
     def open(self) -> ValueError or pygame.Surface:
         if self.__is_opened:
-            raise ValueError(f'ERROR: this object already has an opened window')
+            logging.error(msg = f'Window is already opened')
+            raise ValueError(f'Window is already opened')
         self.__DISPLAY = pygame.display.set_mode(size = (self.width, self.height))
         pygame.display.set_caption(self.title)
         self.__is_opened = True
@@ -42,7 +44,8 @@ class Window:
 
     def close(self) -> bool:
         if not self.__is_opened:
-            raise ValueError(f'ERROR: window has already been closed')
+            logging.error(msg = f'Window is not open')
+            raise ValueError(f'Window is not open')
         pygame.quit()
         self.__is_opened = False
         return True

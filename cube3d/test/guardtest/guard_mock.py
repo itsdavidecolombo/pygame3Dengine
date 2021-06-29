@@ -18,7 +18,7 @@ class GuardMock(EngineGuard):
     def safe_shut_down(self) -> str:
         debug = ''
         if self.engine is not None:
-            if self.engine.get_engine_state() == EngineState.Running:
+            if self.engine.is_alive():
                 debug += 'Stopping the engine '
                 debug += 'Change engine state '
                 debug += 'Closing the window '
