@@ -5,12 +5,12 @@
 # @Description: The GameEngine class
 #
 #################################################
-import threading
-import logging
 import time
 import pygame
+import threading
 from cube3d.screen import Window
 from cube3d.event import EventHandler
+from cube3d.logger import Logger, LoggerLevel
 from cube3d.engine import Clock, EngineState, EngineGuard
 
 
@@ -21,29 +21,30 @@ class GameEngine(threading.Thread):
                  clock: Clock,
                  window: Window,
                  guard: EngineGuard,
-                 handler: EventHandler):
+                 handler: EventHandler,
+                 logger: Logger):
         super().__init__()
         self.handler = handler
         self.window = window
-        self.clock = clock
-        self.guard = guard
+        self.clock  = clock
+        self.guard  = guard
+        self.logger = logger
         self._elapsed_nanoseconds = time.time_ns()
         self._engine_state = EngineState.Created
         self._stop_event = threading.Event()
 
     def set_engine_state(self, to_: EngineState) -> bool:
         if not EngineState.is_allowed_state_transition(from_ = self._engine_state, to_ = to_):
+            self.logger.log(level = LoggerLevel.Severe,
+                            msg = f'GameEngine: cannot change engine state from {self._engine_state} to {to_}')
             return False
         self._engine_state = to_
         return True
 
     # TODO all but the guard to call this method
     def set_stop_event(self):
-        logging.debug(msg = f'Setting stop event')
+        self.logger.log(level = LoggerLevel.Debug, msg = 'GameEngine: Setting stop event...')
         self._stop_event.set()
-
-    def stop(self):
-        self.guard.safe_shut_down()
 
     def is_stopped(self):
         return self._engine_state == EngineState.Destroyed
@@ -59,7 +60,7 @@ class GameEngine(threading.Thread):
         return (self._engine_state == EngineState.Running) or super().is_alive()
 
     def __init_and_run(self):
-        logging.debug(msg = f'Starting the engine...')
+        self.logger.log(level = LoggerLevel.Debug, msg = 'GameEngine: Starting the engine...')
         pygame.init()
         self.__DISPLAY = self.window.open()
         self._engine_state = EngineState.Running

@@ -13,8 +13,11 @@ def make_engine_mock(clock, window, guard, handler):
 
 class EngineMock(GameEngine):
 
-    def __init__(self, window = None, clock = None, guard = None, handler = None):
-        super().__init__(clock = clock, window = window, guard = guard, handler = handler)
+    def __init__(self, window = None, clock = None, guard = None, handler = None, logger = None):
+        super().__init__(clock = clock, window = window, guard = guard, handler = handler, logger = logger)
+
+    def set_logger(self, logger):
+        self.logger = logger
 
     def get_engine_state(self) -> EngineState:
         return self._engine_state
@@ -28,9 +31,6 @@ class EngineMock(GameEngine):
         debug += 'Opening the window '
         debug += 'Engine is running'
         return debug
-
-    def stop(self) -> str:
-        return self.guard.safe_shut_down()
 
     def is_alive(self) -> bool:
         return self._engine_state == EngineState.Running

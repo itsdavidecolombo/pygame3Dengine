@@ -7,19 +7,19 @@
 #################################################
 import unittest
 from cube3d.engine import Clock
+from cube3d.test.loggertest import logger_mock
+from cube3d.test.guardtest import guard_mock
 
 class TestClock(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.clock = Clock(fps = 30)
+        self.guard = guard_mock.make_guard_mock()
+        self.logger = logger_mock.make_logger_mock(self.guard)
+        self.guard.set_logger(self.logger)
+        self.clock = Clock(fps = 30, logger = self.logger)
 
     def tearDown(self) -> None:
         pass
-
-    def test_default_clock(self):
-        clock = Clock()
-        self.assertTrue(clock.fps is None)
-        self.assertTrue(clock._tick_length_nanoseconds is None)
 
     def test_make_clock_with_fps(self):
         self.assertTrue(self.clock.fps == 30)

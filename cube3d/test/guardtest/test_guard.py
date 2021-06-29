@@ -9,6 +9,7 @@ import unittest
 from cube3d.test.enginetest import engine_mock
 from cube3d.test.handlertest import handler_mock
 from cube3d.test.guardtest import guard_mock
+from cube3d.test.loggertest import logger_mock
 from cube3d.screen import Window
 from cube3d.board import GameBoard
 from cube3d.engine import Clock
@@ -18,10 +19,12 @@ class TestGuard(unittest.TestCase):
 
     def setUp(self) -> None:
         self.guard_mock = guard_mock.make_guard_mock()
-        self.clock = Clock()
-        self.window = Window('test')
-        self.board = GameBoard(Cube())
-        self.handler_mock = handler_mock.make_handler_mock(board = self.board, guard = self.guard_mock)
+        self.logger = logger_mock.make_logger_mock(self.guard_mock)
+        self.guard_mock.set_logger(self.logger)
+        self.clock = Clock(fps = 30, logger = self.logger)
+        self.window = Window(title = 'test', logger = self.logger)
+        self.board = GameBoard(player = Cube(), logger = self.logger)
+        self.handler_mock = handler_mock.make_handler_mock(board = self.board, logger = self.logger)
 
     def tearDown(self) -> None:
         pass

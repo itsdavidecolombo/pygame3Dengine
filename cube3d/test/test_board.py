@@ -8,11 +8,15 @@
 import unittest
 from cube3d.board import GameBoard
 from cube3d.data_model import Cube
+from cube3d.test.loggertest import logger_mock
+from cube3d.test.guardtest import guard_mock
 
 class TestGameBoard(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.board  = GameBoard(Cube())
+        self.guard = guard_mock.make_guard_mock()
+        self.logger = logger_mock.make_logger_mock(self.guard)
+        self.board  = GameBoard(Cube(), logger = self.logger)
         self.to_add = Cube()
 
     def tearDown(self) -> None:
@@ -22,13 +26,6 @@ class TestGameBoard(unittest.TestCase):
         self.assertTrue(self.board is not None)
         self.assertTrue(self.board.player is not None)
         self.assertTrue(len(self.board.creatures) == 0)
-
-    def test_should_raise_ValueError_if_player_is_none(self):
-        try:
-            GameBoard(player = None)
-            self.fail()
-        except ValueError:
-            self.assertTrue(True)
 
     def test_add_creature(self):
         self.board.add_creature(self.to_add)
@@ -51,15 +48,8 @@ class TestGameBoard(unittest.TestCase):
         self.assertFalse(is_removed)
 
     def test_creature_list_in_constructor(self):
-        board = GameBoard(player = Cube(), creatures = [self.to_add])
+        board = GameBoard(player = Cube(), logger = self.logger, creatures = [self.to_add])
         self.assertTrue(len(board.creatures) == 1)
-
-    def test_live_object_in_constructor_ValueError_duplicate(self):
-        try:
-            GameBoard(player = Cube(), creatures = [self.to_add, self.to_add])
-            self.fail()
-        except ValueError as ex:
-            print(ex.__str__())
 
     def test_rotate_x(self):
         self.assertTrue(self.board.rotate_x())

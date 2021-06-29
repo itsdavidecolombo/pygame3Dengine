@@ -7,13 +7,14 @@
 #################################################
 import pygame
 from cube3d.board import GameBoard
-from cube3d.engine import EngineGuard
+from cube3d.logger import Logger, LoggerLevel
 
 class EventHandler:
 
-    def __init__(self, guard: EngineGuard, board: GameBoard):
+    def __init__(self, board: GameBoard, logger: Logger = None, guard = None):
         self.guard  = guard
         self.board  = board
+        self.logger = logger
 
     def handle_events(self) -> bool:
         for event in pygame.event.get():
@@ -49,5 +50,5 @@ class EventHandler:
 
 # ============================= QUIT ENGINE METHOD =============================
     def __quit_engine(self) -> bool:
-        self.guard.safe_shut_down()
+        self.logger.log(level = LoggerLevel.Severe, msg = 'EventHandler: quitting the engine...')
         return False

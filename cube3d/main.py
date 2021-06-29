@@ -10,35 +10,35 @@ from cube3d.screen import Window
 from cube3d.event import EventHandler
 from cube3d.engine import GameEngine, Clock, EngineGuard
 from cube3d.board import GameBoard
-import logging
+from cube3d.logger import Logger
 
 
 def run():
 
+    # CREATE THE GUARD
+    guard = EngineGuard()
+
     # DEFINE THE LOGGER
-    logging.basicConfig(level = logging.DEBUG,
-                        format = '[%(levelname)s] On (%(threadName)s) capture \'%(message)s\'')
+    logger = Logger(guard)
+    guard.set_logger(logger)
 
     # ALLOCATE RESOURCES
     player = Cube()
 
     # CREATE GAME BOARD
-    board = GameBoard(player = player)
+    board = GameBoard(player = player, logger = logger)
 
     # CREATE WINDOW
-    window = Window('- game screen -')
+    window = Window(title = '- game screen -', logger = logger)
 
     # CREATE THE CLOCK
-    clock = Clock(fps = 30)
-
-    # CREATE THE GUARD
-    guard = EngineGuard()
+    clock = Clock(fps = 30, logger = logger)
 
     # CREATE EVENT HANDLER
-    handler = EventHandler(guard = guard, board = board)
+    handler = EventHandler(board = board, logger = logger)
 
     # CREATE GAME ENGINE
-    engine = GameEngine(clock = clock, window = window, guard = guard, handler = handler)
+    engine = GameEngine(clock = clock, window = window, guard = guard, handler = handler, logger = logger)
     guard.set_engine(engine)
 
     # START

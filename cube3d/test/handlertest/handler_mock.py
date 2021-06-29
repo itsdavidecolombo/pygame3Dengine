@@ -8,15 +8,15 @@
 #################################################
 from cube3d.event import EventHandler
 
-def make_handler_mock(board, guard):
-    return EventHandlerMock(events = [], board = board, guard = guard)
+def make_handler_mock(board, logger):
+    return EventHandlerMock(events = [], board = board, logger = logger)
 
 class EventHandlerMock(EventHandler):
     QUIT = 'quit'
     OK   = 'ok'
 
-    def __init__(self, events: list[str], board, guard):
-        super().__init__(guard, board)
+    def __init__(self, events: list[str], board, logger):
+        super().__init__(logger = logger, board = board)
         self.events = events
 
     def handle_events(self, events: list[str] = None) -> str:
@@ -24,8 +24,7 @@ class EventHandlerMock(EventHandler):
             self.events = events
         for event in self.events:
             if event == EventHandlerMock.QUIT:
-                debug = self.guard.safe_shut_down()
-                return debug + ' quit_event'
+                return 'quit_event'
             elif event == EventHandlerMock.OK:
                 feed = True
                 feed = feed and self.board.rotate_x()

@@ -5,21 +5,24 @@
 # @Description: The Clock class handles the timing variables of the game loop
 #
 #################################################
+from cube3d.logger import Logger, LoggerLevel
 
 class Clock:
 
     _NANO_PER_SEC = 1e9
 
-    def __init__(self, fps: int = None):
-        self.fps = fps
+    def __init__(self, logger: Logger, fps: int = None):
+        self.logger = logger
+        self.fps    = fps
         self._tick_length_nanoseconds = self.__safe_init_tick_length(fps)
 
-    def __safe_init_tick_length(self, fps: int) -> int or None:
+    def __safe_init_tick_length(self, fps: int) -> int:
         if fps is None:
-            return None
+            self.logger.log(level = LoggerLevel.Severe, msg = f'Clock: cannot start the application if fps is None...')
         return self.__compute_tick_length_nanoseconds()
 
     def set_fps(self, fps: int):
+        self.logger.log(level = LoggerLevel.Debug, msg = f'Clock: set fps to {fps}...')
         self.fps = fps
         self._tick_length_nanoseconds = self.__compute_tick_length_nanoseconds()
 

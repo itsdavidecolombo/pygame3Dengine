@@ -13,8 +13,10 @@ class Logger:
         self.guard = guard
 
     def log(self, level: LoggerLevel, msg: str = '') -> bool:
+        header = f'[{level}]\t'
         if level == LoggerLevel.Severe:
+            print(header + msg)
             self.guard.safe_shut_down()
             return False
-        print(msg)
+        print(header + msg)
         return True
