@@ -11,10 +11,19 @@ from cube3d.logger import Logger, LoggerLevel
 
 class EventHandler:
 
-    def __init__(self, board: GameBoard, logger: Logger = None, guard = None):
-        self.guard  = guard
-        self.board  = board
-        self.logger = logger
+    def __init__(self, board: GameBoard, logger: Logger):
+        self.board  = self.__safe_init_board(board)
+        self.logger = self.__safe_init_logger(logger)
+
+    def __safe_init_board(self, board: GameBoard) -> GameBoard:
+        if board is None:
+            raise ValueError('EventHandler: cannot start the application without reference to the board...')
+        return board
+
+    def __safe_init_logger(self, logger: Logger) -> Logger:
+        if logger is None:
+            raise ValueError('EventHandler: cannot start the application without reference to the logger...')
+        return logger
 
     def handle_events(self) -> bool:
         for event in pygame.event.get():
