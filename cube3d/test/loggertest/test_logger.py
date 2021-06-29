@@ -12,14 +12,22 @@ from cube3d.test.loggertest import logger_mock
 class TestLogger(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.logger = logger_mock.make_logger_mock(object())
+        self.logger = logger_mock.make_logger_mock(guard = None)
 
     def tearDown(self) -> None:
         pass
 
-    def test_should_exit_when_guard_is_none(self):
+    def test_should_exit_when_set_guard_to_none(self):
         try:
-            logger_mock.make_logger_mock(None)
+            self.logger.set_guard(guard = None)
+            self.fail()
+        except ValueError as ex:
+            print(ex.__str__())
+
+    def test_should_exit_when_guard_is_already_set(self):
+        try:
+            self.logger.set_guard(guard = object)
+            self.logger.set_guard(guard = object)
             self.fail()
         except ValueError as ex:
             print(ex.__str__())

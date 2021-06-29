@@ -9,7 +9,12 @@ from cube3d.logger import LoggerLevel
 
 class Logger:
 
-    def __init__(self, guard):
+    def __init__(self, guard = None):
+        self.guard = guard
+
+    def set_guard(self, guard):
+        if self.guard is not None:
+            raise ValueError('Logger: guard is not None...')
         self.__safe_init_guard(guard)
 
     def __safe_init_guard(self, guard):

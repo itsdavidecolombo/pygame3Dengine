@@ -9,7 +9,7 @@ import math
 import numpy as np
 import logging
 from cube3d.data_model.tri4d import Tri4d, Point4d
-from cube3d.screen import Window
+from cube3d.ui import Window
 
 class Transformer:
     Z_NEAR: float = 0.1

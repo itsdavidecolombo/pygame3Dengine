@@ -8,14 +8,11 @@
 import unittest
 from cube3d.engine import Clock
 from cube3d.test.loggertest import logger_mock
-from cube3d.test.guardtest import guard_mock
 
 class TestClock(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.guard = guard_mock.make_guard_mock()
-        self.logger = logger_mock.make_logger_mock(self.guard)
-        self.guard.set_logger(self.logger)
+        self.logger = logger_mock.make_logger_mock(object())
         self.clock = Clock(fps = 30, logger = self.logger)
 
     def tearDown(self) -> None:

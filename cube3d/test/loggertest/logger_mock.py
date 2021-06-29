@@ -12,7 +12,7 @@ def make_logger_mock(guard):
 
 class LoggerMock(Logger):
 
-    def __init__(self, guard):
+    def __init__(self, guard = None):
         super().__init__(guard)
 
     def log(self, level: LoggerLevel, msg: str = '') -> str:

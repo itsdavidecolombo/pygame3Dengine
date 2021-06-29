@@ -7,31 +7,13 @@
 #################################################
 from cube3d.engine import EngineGuard, EngineState
 
-def make_guard_mock():
-    return GuardMock()
+def make_guard_mock(engine, logger):
+    return GuardMock(engine = engine, logger = logger)
 
 class GuardMock(EngineGuard):
 
-    def __init__(self, engine = None):
-        super().__init__(engine)
-
-    def set_engine(self, engine) -> str:
-        debug = ''
-        if self.engine is not None:
-            debug += 'Engine is not None Exit the system'
-            return debug
-        debug += 'Setting the engine'
-        self.engine = engine
-        return debug
-
-    def set_logger(self, logger) -> str:
-        debug = ''
-        if self.logger is not None:
-            debug += 'Logger is not None Exit the system'
-            return debug
-        debug += 'Setting the logger'
-        self.logger = logger
-        return debug
+    def __init__(self, engine, logger):
+        super().__init__(engine, logger)
 
     def safe_start(self) -> str:
         debug = ''

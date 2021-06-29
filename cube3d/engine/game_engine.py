@@ -6,9 +6,10 @@
 #
 #################################################
 import time
+# TODO remove pygame import in future
 import pygame
 import threading
-from cube3d.screen import Window
+from cube3d.ui import Window
 from cube3d.event import EventHandler
 from cube3d.logger import Logger, LoggerLevel
 from cube3d.engine import Clock, EngineState
@@ -19,6 +20,7 @@ class GameEngine(threading.Thread):
 
     def __init__(self, clock: Clock, window: Window, handler: EventHandler, logger: Logger):
         super().__init__()
+        self.__DISPLAY = None
         self.handler = handler
         self.window  = window
         self.clock   = clock
@@ -36,6 +38,10 @@ class GameEngine(threading.Thread):
     def set_stop_event(self):
         self.logger.log(level = LoggerLevel.Debug, msg = 'GameEngine: Setting stop event...')
         self._stop_event.set()
+
+    # TODO remove this method in future
+    def set_display(self, display: pygame.Surface):
+        self.__DISPLAY = display
 
     def is_stopped(self):
         return self._engine_state == EngineState.Destroyed
@@ -58,7 +64,7 @@ class GameEngine(threading.Thread):
         # Update Objects
 
         # Draw Objects
-        # self.__DISPLAY.fill(Window.BLACK)
+        self.__DISPLAY.fill(Window.BLACK)
 
         # Update display
         pygame.display.update()

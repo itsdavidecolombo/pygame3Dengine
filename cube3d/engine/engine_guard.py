@@ -5,36 +5,27 @@
 # @Description: A class for checking the correct behaviour during the game loop
 #
 #################################################
-from cube3d.engine import EngineState
+from cube3d.engine import EngineState, GameEngine
 from cube3d.logger import Logger, LoggerLevel
-import pygame
 import sys
 
 class EngineGuard:
 
-    def __init__(self, engine = None, logger: Logger = None):
-        self.engine = engine
-        self.logger = logger
+    def __init__(self, engine: GameEngine, logger: Logger):
+        self.engine = self.__safe_init_engine(engine)
+        self.logger = self.__safe_init_logger(logger)
 
-    # TODO remove set engine and force engine in constructor
-    def set_engine(self, engine):
-        if self.engine is not None:
-            self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: engine is not None...')
-        self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Setting the engine...')
-        self.engine = engine
+    def __safe_init_logger(self, logger: Logger) -> Logger:
+        if logger is None:
+            raise ValueError('EngineGuard: cannot start application when logger is None...')
+        return logger
 
-    def set_logger(self, logger):
-        if self.logger is not None:
-            self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: logger is not None...')
-        self.logger = logger
-        self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Setting the logger...')
+    def __safe_init_engine(self, engine: GameEngine):
+        if engine is None:
+            raise ValueError('EngineGuard: cannot start application when engine is None...')
+        return engine
 
     def safe_start(self):
-        if self.logger is None:
-            raise ValueError(f'EngineGuard: cannot start the application without a valid logger...')
-        if self.engine is None:
-            raise ValueError(f'EngineGuard: cannot start the application without a valid engine...')
-
         self.__check_engine()
         self.__start_engine()
 
@@ -53,10 +44,11 @@ class EngineGuard:
         else:
             self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: engine is ready to start...')
 
+    # TODO handle display
     def __start_engine(self):
         self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Starting the engine...')
-        pygame.init()
-        # self.__DISPLAY = self.window.open()
+        display = self.engine.window.open()
+        self.engine.set_display(display = display)
         self.engine.set_engine_state(EngineState.Running)
         self.engine.run()
 
@@ -67,6 +59,5 @@ class EngineGuard:
                 self.engine.set_stop_event()
                 self.engine.set_engine_state(to_ = EngineState.Destroyed)
                 self.engine.window.close()
-                pygame.quit()
         self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Exit the system...')
         sys.exit()

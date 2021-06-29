@@ -15,9 +15,7 @@ class TestEngine(unittest.TestCase):
 
     def setUp(self) -> None:
         self.engine  = engine_mock.make_engine_mock(clock = object(), window = object(), handler = object())
-        self.guard = guard_mock.make_guard_mock()
-        self.guard.set_engine(self.engine)
-        self.guard.set_logger(object())
+        self.guard = guard_mock.make_guard_mock(engine = self.engine, logger = object())
 
     def tearDown(self) -> None:
         pass

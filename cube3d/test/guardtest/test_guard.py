@@ -13,9 +13,7 @@ class TestGuard(unittest.TestCase):
 
     def setUp(self) -> None:
         self.engine = engine_mock.make_engine_mock(clock = object(), window = object(), handler = object())
-        self.guard_mock = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(self.engine)
-        self.guard_mock.set_logger(object())
+        self.guard_mock = guard_mock.make_guard_mock(engine = self.engine, logger = object())
 
     def tearDown(self) -> None:
         pass
@@ -39,40 +37,32 @@ class TestGuard(unittest.TestCase):
         self.assertTrue(debug_msg == 'Stopping the engine Change engine state Closing the window Quitting pygame Exit the system')
 
     def test_set_none_engine(self):
-        self.engine = engine_mock.make_engine_mock(clock = object(), window = object(), handler = object())
-        self.guard_mock = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(None)
-        self.guard_mock.set_logger(object())
-        debug_msg = self.guard_mock.safe_start()
-        self.assertTrue(debug_msg == 'Engine is None Exit the system')
+        try:
+            guard_mock.make_guard_mock(engine = None, logger = object())
+            self.fail()
+        except ValueError as ex:
+            print(ex.__str__())
 
     def test_set_none_logger(self):
-        self.engine = engine_mock.make_engine_mock(clock = object(), window = object(), handler = object())
-        self.guard_mock = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(self.engine)
-        self.guard_mock.set_logger(None)
-        debug_msg = self.guard_mock.safe_start()
-        self.assertTrue(debug_msg == 'Logger is None Exit the system')
+        try:
+            guard_mock.make_guard_mock(engine = object(), logger = None)
+            self.fail()
+        except ValueError as ex:
+            print(ex.__str__())
 
     def test_should_exit_if_engine_is_not_initialize_correctly(self):
         self.engine = engine_mock.make_engine_mock(clock = object(), window = None, handler = object())
-        self.guard_mock = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(self.engine)
-        self.guard_mock.set_logger(object())
+        self.guard_mock = guard_mock.make_guard_mock(engine = self.engine, logger = object())
         debug_msg = self.guard_mock.safe_start()
         self.assertTrue(debug_msg == 'Check engine Window is None Exit the system')
 
         self.engine = engine_mock.make_engine_mock(clock = None, window = object(), handler = object())
-        self.guard_mock = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(self.engine)
-        self.guard_mock.set_logger(object())
+        self.guard_mock = guard_mock.make_guard_mock(engine = self.engine, logger = object())
         debug_msg = self.guard_mock.safe_start()
         self.assertTrue(debug_msg == 'Check engine Clock is None Exit the system')
 
         self.engine = engine_mock.make_engine_mock(clock = object(), window = object(), handler = None)
-        self.guard_mock = guard_mock.make_guard_mock()
-        self.guard_mock.set_engine(self.engine)
-        self.guard_mock.set_logger(object())
+        self.guard_mock = guard_mock.make_guard_mock(engine = self.engine, logger = object())
         debug_msg = self.guard_mock.safe_start()
         self.assertTrue(debug_msg == 'Check engine Handler is None Exit the system')
 
