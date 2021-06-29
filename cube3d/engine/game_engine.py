@@ -27,7 +27,6 @@ class GameEngine(threading.Thread):
         self.logger  = logger
         self._elapsed_nanoseconds = 0
         self._engine_state = EngineState.Created
-        self._stop_event   = threading.Event()
 
     def set_engine_state(self, to_: EngineState):
         if not EngineState.is_allowed_state_transition(from_ = self._engine_state, to_ = to_):
@@ -35,14 +34,11 @@ class GameEngine(threading.Thread):
                             msg = f'GameEngine: cannot change engine state from {self._engine_state} to {to_}')
         self._engine_state = to_
 
-    def set_stop_event(self):
-        self.logger.log(level = LoggerLevel.Debug, msg = 'GameEngine: Setting stop event...')
-        self._stop_event.set()
-
     # TODO remove this method in future
     def set_display(self, display: pygame.Surface):
         self.__DISPLAY = display
 
+    # TODO synchronize access to the method
     def is_stopped(self):
         return self._engine_state == EngineState.Destroyed
 
@@ -50,7 +46,7 @@ class GameEngine(threading.Thread):
         return (self._engine_state == EngineState.Running) or super().is_alive()
 
     def run(self):
-        while not self._stop_event.is_set():
+        while not self.is_stopped():
             time.sleep(self.clock.get_pause_seconds(elapsed_nano = self._elapsed_nanoseconds))
             self.__on_clock_tick()
         return

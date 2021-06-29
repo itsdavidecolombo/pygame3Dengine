@@ -56,7 +56,6 @@ class EngineGuard:
         if self.engine is not None:
             if self.engine.is_alive():
                 self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Safe shut down the engine...')
-                self.engine.set_stop_event()
                 self.engine.set_engine_state(to_ = EngineState.Destroyed)
                 self.engine.window.close()
         self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Exit the system...')
