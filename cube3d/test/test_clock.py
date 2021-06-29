@@ -22,9 +22,29 @@ class TestClock(unittest.TestCase):
         self.assertTrue(self.clock.fps == 30)
         self.assertTrue(self.clock._tick_length_nanoseconds == int((1/30)*1e9))
 
+    def test_should_raise_ValueError_when_set_negative_fps(self):
+        try:
+            Clock(fps = -10, logger = self.logger)
+            self.fail()
+        except ValueError as ex:
+            print(ex.__str__())
+
+        try:
+            Clock(fps = None, logger = self.logger)
+            self.fail()
+        except ValueError as ex:
+            print(ex.__str__())
+
+    def test_should_raise_ValueError_when_logger_is_None(self):
+        try:
+            Clock(fps = 10, logger = None)
+            self.fail()
+        except ValueError as ex:
+            print(ex.__str__())
+
     def test_compute_pausing_time_between_loop_iterations(self):
         pause = self.clock.get_pause_seconds(elapsed_nano = int(1e5))
-        self.assertTrue(pause == float((int((1/30)*1e9) - int(1e5))/1e9))
+        self.assertTrue(pause == float((int((1/float(30))*1e9) - int(1e5))/1e9))
         pause2 = self.clock.get_pause_seconds(elapsed_nano = int(1e10))
         self.assertTrue(pause2 == 0.0)
 
