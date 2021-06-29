@@ -24,7 +24,6 @@ class TestLogger(unittest.TestCase):
         except ValueError as ex:
             print(ex.__str__())
 
-
     def test_should_exit_when_receive_severe_log(self):
         log = self.logger.log(level = logger_mock.LoggerLevel.Severe, msg = 'something happen')
         self.assertTrue(log == 'Level Severe received Exit the system')

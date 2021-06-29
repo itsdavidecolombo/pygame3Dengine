@@ -15,22 +15,19 @@ class EventHandlerMock(EventHandler):
     QUIT = 'quit'
     OK   = 'ok'
 
-    def __init__(self, events: list[str], board, logger):
+    def __init__(self, events: list[str], board = None, logger = None):
         super().__init__(logger = logger, board = board)
         self.events = events
 
     def handle_events(self, events: list[str] = None) -> str:
         if events is not None:
             self.events = events
+        debug = ''
         for event in self.events:
             if event == EventHandlerMock.QUIT:
-                return 'quit_event'
+                debug += 'Quit event Exit the system'
+                return debug
             elif event == EventHandlerMock.OK:
-                feed = True
-                feed = feed and self.board.rotate_x()
-                feed = feed and self.board.rotate_y()
-                feed = feed and self.board.rotate_z()
-                if feed:
-                    return 'ok_event'
-                else:
-                    return 'quit_event'
+                debug += 'Ok event received '
+
+        return debug
