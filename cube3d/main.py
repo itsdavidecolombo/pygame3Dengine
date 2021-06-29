@@ -15,30 +15,33 @@ from cube3d.logger import Logger
 
 def run():
 
-    # DEFINE THE LOGGER
-    logger = Logger()
+    try:
+        # DEFINE THE LOGGER
+        logger = Logger()
 
-    # ALLOCATE RESOURCES
-    player = Cube()
+        # ALLOCATE RESOURCES
+        player = Cube()
 
-    # CREATE GAME BOARD
-    board = GameBoard(player = player, logger = logger)
+        # CREATE GAME BOARD
+        board = GameBoard(player = player, logger = logger)
 
-    # CREATE WINDOW
-    window = Window(title = '- game ui -', logger = logger)
+        # CREATE WINDOW
+        window = Window(title = '- game ui -', logger = logger)
 
-    # CREATE THE CLOCK
-    clock = Clock(fps = 30, logger = logger)
+        # CREATE THE CLOCK
+        clock = Clock(fps = 20, logger = logger)
 
-    # CREATE EVENT HANDLER
-    handler = EventHandler(board = board, logger = logger)
+        # CREATE EVENT HANDLER
+        handler = EventHandler(board = board, logger = logger)
 
-    # CREATE GAME ENGINE
-    engine = GameEngine(clock = clock, window = window, handler = handler, logger = logger)
+        # CREATE GAME ENGINE
+        engine = GameEngine(clock = clock, window = window, handler = handler, logger = logger)
 
-    # CREATE THE GUARD
-    guard = EngineGuard(engine = engine, logger = logger)
-    logger.set_guard(guard = guard)
+        # CREATE THE GUARD
+        guard = EngineGuard(engine = engine, logger = logger)
+        logger.set_guard(guard = guard)
 
-    # START
-    guard.safe_start()
+        # START
+        guard.safe_start()
+    except ValueError as ex:
+        print(ex.__str__())

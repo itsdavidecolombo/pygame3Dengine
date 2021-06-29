@@ -25,7 +25,7 @@ class Window:
 
     def __safe_init_logger(self, logger: Logger) -> Logger:
         if logger is None:
-            raise ValueError('Window: logger is None...')
+            raise ValueError('Window: cannot start the game without a valid logger...')
         return logger
 
     def __safe_init_dimensions(self, width: int, height: int) -> (int, int):

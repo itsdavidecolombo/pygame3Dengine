@@ -25,7 +25,7 @@ class GameEngine(threading.Thread):
         self.window  = window
         self.clock   = clock
         self.logger  = logger
-        self._elapsed_nanoseconds = time.time_ns()
+        self._elapsed_nanoseconds = 0
         self._engine_state = EngineState.Created
         self._stop_event   = threading.Event()
 

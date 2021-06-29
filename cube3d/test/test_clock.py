@@ -20,7 +20,7 @@ class TestClock(unittest.TestCase):
 
     def test_make_clock_with_fps(self):
         self.assertTrue(self.clock.fps == 30)
-        self.assertTrue(self.clock._tick_length_nanoseconds == int((1/30)*1e9))
+        self.assertTrue(self.clock._tick_nano == int((1 / 30) * 1e9))
 
     def test_should_raise_ValueError_when_set_negative_fps(self):
         try:
