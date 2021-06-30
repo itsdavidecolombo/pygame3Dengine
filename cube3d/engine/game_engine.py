@@ -38,9 +38,11 @@ class GameEngine(threading.Thread):
         return (self._engine_state == EngineState.Running) or super().is_alive()
 
     def fire_close_event(self):
+        self.logger.log(level = LoggerLevel.Debug, msg = 'GameEngine: fire close event...')
         self.handler.handle_events(EventType.CLOSE_EVENT)
 
     def fire_open_event(self):
+        self.logger.log(level = LoggerLevel.Debug, msg = 'GameEngine: fire open event...')
         self.handler.handle_events(EventType.OPEN_EVENT)
 
     def run(self):

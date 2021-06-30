@@ -12,7 +12,7 @@ from cube3d.test.guardtest import guard_mock
 class TestGuard(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.engine = engine_mock.make_engine_mock(clock = object(), window = object(), handler = object())
+        self.engine = engine_mock.make_engine_mock(clock = object(), handler = object())
         self.guard_mock = guard_mock.make_guard_mock(engine = self.engine, logger = object())
 
     def tearDown(self) -> None:
@@ -50,18 +50,13 @@ class TestGuard(unittest.TestCase):
         except ValueError as ex:
             print(ex.__str__())
 
-    def test_should_exit_if_engine_is_not_initialize_correctly(self):
-        self.engine = engine_mock.make_engine_mock(clock = object(), window = None, handler = object())
-        self.guard_mock = guard_mock.make_guard_mock(engine = self.engine, logger = object())
-        debug_msg = self.guard_mock.safe_start()
-        self.assertTrue(debug_msg == 'Check engine Window is None Exit the system')
-
-        self.engine = engine_mock.make_engine_mock(clock = None, window = object(), handler = object())
+    def test_should_exit_if_engine_is_not_initialized_correctly(self):
+        self.engine = engine_mock.make_engine_mock(clock = None, handler = object())
         self.guard_mock = guard_mock.make_guard_mock(engine = self.engine, logger = object())
         debug_msg = self.guard_mock.safe_start()
         self.assertTrue(debug_msg == 'Check engine Clock is None Exit the system')
 
-        self.engine = engine_mock.make_engine_mock(clock = object(), window = object(), handler = None)
+        self.engine = engine_mock.make_engine_mock(clock = object(), handler = None)
         self.guard_mock = guard_mock.make_guard_mock(engine = self.engine, logger = object())
         debug_msg = self.guard_mock.safe_start()
         self.assertTrue(debug_msg == 'Check engine Handler is None Exit the system')

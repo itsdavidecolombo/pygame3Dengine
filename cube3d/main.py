@@ -38,10 +38,10 @@ def run():
         clock = Clock(fps = 20, logger = logger)
 
         # CREATE EVENT HANDLER
-        handler = EventHandler(board = board, logger = logger)
+        handler = EventHandler(board = board, window = window, logger = logger)
 
         # CREATE GAME ENGINE
-        engine = GameEngine(clock = clock, window = window, handler = handler, logger = logger)
+        engine = GameEngine(clock = clock, handler = handler, logger = logger)
 
         # CREATE THE GUARD
         guard = EngineGuard(engine = engine, logger = logger)

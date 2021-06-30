@@ -8,13 +8,13 @@
 #################################################
 from cube3d.engine import GameEngine, EngineState
 
-def make_engine_mock(clock, window, handler):
-    return EngineMock(clock = clock, window = window, handler = handler)
+def make_engine_mock(clock, handler):
+    return EngineMock(clock = clock, handler = handler)
 
 class EngineMock(GameEngine):
 
-    def __init__(self, window = None, clock = None, handler = None, logger = None):
-        super().__init__(clock = clock, window = window, handler = handler, logger = logger)
+    def __init__(self, clock = None, handler = None, logger = None):
+        super().__init__(clock = clock, handler = handler, logger = logger)
 
     def get_engine_state(self) -> EngineState:
         return self._engine_state
@@ -30,3 +30,9 @@ class EngineMock(GameEngine):
 
     def is_alive(self) -> bool:
         return self._engine_state == EngineState.Running
+
+    def fire_close_event(self) -> str:
+        return 'Close event fired'
+
+    def fire_open_event(self) -> str:
+        return 'Open event fired'

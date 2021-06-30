@@ -14,11 +14,17 @@ from cube3d.test.guardtest import guard_mock
 class TestEngine(unittest.TestCase):
 
     def setUp(self) -> None:
-        self.engine  = engine_mock.make_engine_mock(clock = object(), window = object(), handler = object())
+        self.engine  = engine_mock.make_engine_mock(clock = object(), handler = object())
         self.guard = guard_mock.make_guard_mock(engine = self.engine, logger = object())
 
     def tearDown(self) -> None:
         pass
+
+    def test_should_fire_open_event(self):
+        self.assertTrue(self.engine.fire_open_event() == 'Open event fired')
+
+    def test_should_fire_close_event(self):
+        self.assertTrue(self.engine.fire_close_event() == 'Close event fired')
 
     def test_should_set_state_consistently(self):
         self.assertTrue(self.engine.get_engine_state() == EngineState.Created)

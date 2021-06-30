@@ -50,7 +50,6 @@ class TestWindow(unittest.TestCase):
         except ValueError as ex:
             print(ex.__str__())
 
-
     def test_open_window(self):
         self.window.open()
         self.assertTrue(self.window.is_opened())

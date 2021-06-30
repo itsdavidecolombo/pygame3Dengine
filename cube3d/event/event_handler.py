@@ -51,9 +51,11 @@ class EventHandler:
         # self.board.draw()
 
     def __handle_open_event(self):
+        self.logger.log(level = LoggerLevel.Debug, msg = f'EventHandler: dispatching {EventType.OPEN_EVENT} to the window...')
         self.window.open()
 
     def __handle_close_event(self):
+        self.logger.log(level = LoggerLevel.Debug, msg = f'EventHandler: dispatching {EventType.CLOSE_EVENT} to the window...')
         self.window.close()
 
 # ============================= USER EVENTS =============================

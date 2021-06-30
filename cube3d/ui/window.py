@@ -55,5 +55,6 @@ class Window:
     def close(self) -> None:
         if not self.__is_opened:
             self.logger.log(level = LoggerLevel.Severe, msg = 'Window: window is not open...')
+        self.logger.log(level = LoggerLevel.Debug, msg = 'Window: closing the window...')
         self.__is_opened = False
         pygame.quit()

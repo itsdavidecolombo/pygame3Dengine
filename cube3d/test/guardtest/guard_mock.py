@@ -32,10 +32,7 @@ class GuardMock(EngineGuard):
 
     def __check_engine(self) -> str:
         debug = 'Check engine '
-        if self.engine.window is None:
-            debug += 'Window is None Exit the system'
-            return debug
-        elif self.engine.handler is None:
+        if self.engine.handler is None:
             debug += 'Handler is None Exit the system'
             return debug
         elif self.engine.clock is None:
