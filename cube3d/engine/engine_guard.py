@@ -31,9 +31,7 @@ class EngineGuard:
 
     def __check_engine(self):
         self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Checking engine before starting...')
-        if self.engine.window is None:
-            self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: window is None...')
-        elif self.engine.handler is None:
+        if self.engine.handler is None:
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: event handler is None...')
         elif self.engine.clock is None:
             self.logger.log(level = LoggerLevel.Severe, msg = 'EngineGuard: clock is None...')
@@ -44,11 +42,9 @@ class EngineGuard:
         else:
             self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: engine is ready to start...')
 
-    # TODO handle display
     def __start_engine(self):
         self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Starting the engine...')
-        display = self.engine.window.open()
-        self.engine.set_display(display = display)
+        self.engine.fire_open_event()
         self.engine.set_engine_state(EngineState.Running)
         self.engine.run()
 
@@ -57,6 +53,6 @@ class EngineGuard:
             if self.engine.is_alive():
                 self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Safe shut down the engine...')
                 self.engine.set_engine_state(to_ = EngineState.Destroyed)
-                self.engine.window.close()
+                self.engine.fire_close_event()
         self.logger.log(level = LoggerLevel.Debug, msg = 'EngineGuard: Exit the system...')
         sys.exit()

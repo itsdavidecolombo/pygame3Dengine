@@ -21,9 +21,15 @@ def run():
 
         # ALLOCATE RESOURCES
         player = Cube()
+        # enemies: list[Enemy]
+        # power_ups: list[PowerUp]
+        # map: Map
 
         # CREATE GAME BOARD
         board = GameBoard(player = player, logger = logger)
+        # board.set_enemies(enemies)
+        # board.set_power_ups(power_ups)
+        # board.set_map(map)
 
         # CREATE WINDOW
         window = Window(title = '- game ui -', logger = logger)

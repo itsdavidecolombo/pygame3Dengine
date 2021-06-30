@@ -9,10 +9,10 @@ from cube3d.logger import Logger, LoggerLevel
 
 class GameBoard:
 
-    def __init__(self, player, logger: Logger, creatures: list = None):
+    def __init__(self, player, logger: Logger):
         self.logger = self.__safe_init_logger(logger)
         self.player = self.__safe_init_player(player)
-        self.creatures = self.__safe_init_list(creatures)
+        self.creatures = []
 
     def __safe_init_player(self, player):
         if player is None:
@@ -23,18 +23,6 @@ class GameBoard:
         if logger is None:
             raise ValueError('GameBoard: cannot start the game without a valid logger...')
         return logger
-
-    def __safe_init_list(self, creatures):
-        if creatures is None:
-            return []
-
-        set_of_el = set()
-        for c in creatures:
-            if c in set_of_el:
-                raise ValueError('GameBoard: list of creature contains duplicates...')
-            else:
-                set_of_el.add(c)
-        return creatures
 
 # =================================== OTHER METHODS ===================================
     def add_creature(self, to_add) -> bool:
@@ -63,3 +51,6 @@ class GameBoard:
 
     def rotate_z(self):
         self.logger.log(level = LoggerLevel.Debug, msg = 'GameBoard: rotate cube around z axis...')
+
+
+    # TODO add draw method that cycles through the objects and draws everyone

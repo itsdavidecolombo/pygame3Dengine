@@ -44,17 +44,16 @@ class Window:
     def is_opened(self):
         return self.__is_opened
 
-    def open(self) -> pygame.Surface:
+    def open(self) -> None:
         if self.__is_opened:
-            self.logger.log(level = LoggerLevel.Severe, msg = 'Window: already opened...')
+            self.logger.log(level = LoggerLevel.Severe, msg = 'Window: window is already opened...')
         pygame.init()
         self.__DISPLAY = pygame.display.set_mode(size = (self.width, self.height))
         pygame.display.set_caption(self.title)
         self.__is_opened = True
-        return self.__DISPLAY
 
     def close(self) -> None:
         if not self.__is_opened:
-            self.logger.log(level = LoggerLevel.Severe, msg = 'Window: not open...')
+            self.logger.log(level = LoggerLevel.Severe, msg = 'Window: window is not open...')
         self.__is_opened = False
         pygame.quit()

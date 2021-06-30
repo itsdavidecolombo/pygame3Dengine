@@ -7,13 +7,13 @@
 #################################################
 from cube3d.board import GameBoard
 
-def make_board_mock(player, logger, creatures):
-    return BoardMock(player = player, logger = logger, creatures = creatures)
+def make_board_mock(player, logger):
+    return BoardMock(player = player, logger = logger)
 
 class BoardMock(GameBoard):
 
-    def __init__(self, player, logger, creatures):
-        super().__init__(player = player, logger = logger, creatures = creatures)
+    def __init__(self, player, logger):
+        super().__init__(player = player, logger = logger)
 
     def add_creature(self, to_add) -> str:
         debug = ''

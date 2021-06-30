@@ -6,26 +6,58 @@
 #
 #################################################
 import pygame
+from cube3d.event import EventType
 from cube3d.board import GameBoard
+from cube3d.ui import Window
 from cube3d.logger import Logger, LoggerLevel
 
 class EventHandler:
 
-    def __init__(self, board: GameBoard, logger: Logger):
+    def __init__(self, board: GameBoard, window: Window, logger: Logger):
         self.board  = self.__safe_init_board(board)
         self.logger = self.__safe_init_logger(logger)
+        self.window = self.__safe_init_window(window)
 
     def __safe_init_board(self, board: GameBoard) -> GameBoard:
         if board is None:
             raise ValueError('EventHandler: cannot start the application without reference to the board...')
         return board
 
+    def __safe_init_window(self, window: Window) -> Window:
+        if window is None:
+            raise ValueError('EventHandler: cannot start the application without reference to the window...')
+        return window
+
     def __safe_init_logger(self, logger: Logger) -> Logger:
         if logger is None:
             raise ValueError('EventHandler: cannot start the application without reference to the logger...')
         return logger
 
-    def handle_events(self) -> bool:
+    def handle_events(self, event: EventType):
+        if event == EventType.CLOSE_EVENT:
+            self.__handle_close_event()
+        elif event == EventType.OPEN_EVENT:
+            self.__handle_open_event()
+        elif event == EventType.DRAW_EVENT:
+            self.__handle_draw_event()
+        elif event == EventType.USER_EVENT:
+            self.__handle_user_events()
+        else:
+            self.logger.log(level = LoggerLevel.Severe,
+                            msg = f'EventHandler: \'handle_events()\' method cannot handle {event} events...')
+
+    def __handle_draw_event(self):
+        pass
+        # self.board.draw()
+
+    def __handle_open_event(self):
+        self.window.open()
+
+    def __handle_close_event(self):
+        self.window.close()
+
+# ============================= USER EVENTS =============================
+    def __handle_user_events(self):
         for event in pygame.event.get():
             # QUIT EVENT
             if event.type == pygame.QUIT:
@@ -39,8 +71,6 @@ class EventHandler:
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_j:
                     pass
-
-        return True
 
 # ============================= HANDLE KEY DOWN METHOD =============================
     def __handle_key_down(self, event):
